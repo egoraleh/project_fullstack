@@ -19,20 +19,9 @@ class Application
         $this->router = new Router($this->request, $this->response);
     }
 
-    public function run() {
-
-        try {
-            $this->router->resolve();
-        }
-        catch (\Exception $exception) {
-            var_dump($exception);
-            $this->response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
-        }
-    }
-
-    public function getRequest(): Request
+    public function run(): void
     {
-        return $this->request;
+        $this->router->resolve();
     }
 
     public function getRouter(): Router
