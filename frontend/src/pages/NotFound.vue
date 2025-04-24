@@ -2,7 +2,7 @@
   <div class="not-found">
     <h1>404</h1>
     <p>Страница не найдена</p>
-    <p><router-link to="/">Вернуться на главную</router-link></p>
+    <p><router-link to="/about" class="go-home-link">Вернуться на главную</router-link></p>
   </div>
 </template>
 
@@ -15,18 +15,29 @@ export default {
 <style scoped>
 .not-found {
   text-align: center;
-  margin-top: 50px;
+  margin-top: 12%;
 }
-h1 {
-  font-size: 50px;
-  color: #f44336;
+
+.not-found h1 {
+  font-size: 3rem;
+  color: #33cccc;
+  margin-bottom: 20px;
 }
-p {
-  font-size: 20px;
+
+.not-found p {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 20px;
 }
-router-link {
+
+.go-home-link {
+  color: #00b3b3;
+  font-size: 1.2rem;
   text-decoration: none;
-  color: #2196F3;
-  font-size: 18px;
+  font-weight: 500;
+}
+
+.go-home-link:hover {
+  text-decoration: underline;
 }
 </style>
