@@ -1,7 +1,11 @@
 <template>
-  <Header />
-  <router-view />
-  <Footer />
+  <div id="app">
+    <Header />
+    <main class="main-content">
+      <router-view />
+    </main>
+    <Footer />
+  </div>
 </template>
 
 <script setup>
@@ -13,5 +17,16 @@ import Footer from './components/Footer.vue'
 body {
   font-family: sans-serif;
   margin: 0;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
 }
 </style>

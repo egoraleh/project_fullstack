@@ -1,14 +1,14 @@
 <template>
-  <footer>
+  <footer class="footer">
     <p>© 2025 Онлайн-доска объявлений</p>
   </footer>
 </template>
 
 <style scoped>
-footer {
+.footer {
   padding: 20px;
+  background-color: #222;
+  color: white;
   text-align: center;
-  background: #f8f8f8;
-  margin-top: 30px;
 }
 </style>
