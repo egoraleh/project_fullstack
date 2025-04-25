@@ -1,11 +1,11 @@
 <template>
-  <div class="home">
+  <div class="about">
     <div class="greeting">
       <h1>Здравствуйте, {{ username }}!</h1>
     </div>
 
     <div class="about-platform">
-      <h2 class="home-header">О нашем сервисе</h2>
+      <h2 class="about-header">О нашем сервисе</h2>
       <p>
         Добро пожаловать на онлайн-доску объявлений! Здесь вы можете быстро и удобно покупать и продавать товары, а также предлагать и находить услуги.
       </p>
@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: 'Home',
+  name: 'About',
   data() {
     return {
       username: 'гость',
@@ -43,45 +43,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.home {
-  max-width: 800px;
-  margin: 30px auto;
-  padding: 30px 20px;
-  font-family: 'Roboto', sans-serif;
-  color: #333;
-}
-
-.greeting {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.greeting h1 {
-  font-size: 3rem;
-  color: #33cccc;
-}
-
-.home-header {
-  font-size: 2rem;
-  color: #33cccc;
-  margin-bottom: 20px;
-}
-
-.about-platform p {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  margin-bottom: 15px;
-}
-
-.register-link {
-  color: #00b3b3;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.register-link:hover {
-  text-decoration: underline;
-}
-</style>

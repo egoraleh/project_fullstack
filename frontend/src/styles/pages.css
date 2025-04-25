@@ -1,0 +1,67 @@
+.about {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 30px 20px;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+}
+
+.greeting {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.greeting h1 {
+    font-size: 3rem;
+    color: #33cccc;
+}
+
+.about-header {
+    font-size: 2rem;
+    color: #33cccc;
+    margin-bottom: 20px;
+}
+
+.about-platform p {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    margin-bottom: 15px;
+}
+
+.register-link {
+    color: #00b3b3;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+.not-found {
+    text-align: center;
+    margin-top: 12%;
+}
+
+.not-found h1 {
+    font-size: 3rem;
+    color: #33cccc;
+    margin-bottom: 20px;
+}
+
+.not-found p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.go-home-link {
+    color: #00b3b3;
+    font-size: 1.2rem;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.go-home-link:hover {
+    text-decoration: underline;
+}
