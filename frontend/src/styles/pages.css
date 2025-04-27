@@ -241,29 +241,33 @@
     gap: 20px;
 }
 
-.home-container .ad-card {
+.ad-card {
     border: 1px solid #ddd;
     padding: 15px;
     border-radius: 8px;
     background: #f9f9f9;
 }
 
-.home-container .ad-card h3 {
+.ad-card h3 {
     margin: 0 0 10px;
 }
 
-.home-container .ad-card .price {
+.ad-card .description {
+    margin-bottom: 10px;
+}
+
+.ad-card .price {
     color: #33cccc;
     font-weight: bold;
     margin: 10px 0;
 }
 
-.home-container .details-link {
+.ad-card .details-link {
     text-decoration: none;
     color: #006699;
     font-weight: bold;
 }
 
-.home-container .details-link:hover {
+.ad-card .details-link:hover {
     text-decoration: underline;
 }

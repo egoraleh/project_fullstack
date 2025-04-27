@@ -23,19 +23,17 @@
     </div>
 
     <div class="ads-list">
-      <div v-for="ad in filteredAds" :key="ad.id" class="ad-card">
-        <h3>{{ ad.title }}</h3>
-        <p>{{ ad.description }}</p>
-        <p class="price">{{ ad.price }} ₽</p>
-        <router-link :to="'/ad=' + ad.id" class="details-link">Подробнее</router-link>
-      </div>
+      <AdCard v-for="ad in filteredAds" :key="ad.id" :ad="ad"/>
     </div>
   </div>
 </template>
 
 <script>
+import AdCard from "../../components/AdCard.vue";
+
 export default {
-  name: "Home",
+  name: "Ads",
+  components: {AdCard},
   data() {
     return {
       searchQuery: "",
