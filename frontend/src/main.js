@@ -7,14 +7,16 @@ import NotFound from './pages/exceptions/NotFound.vue'
 import Login from './pages/authentication/Login.vue'
 import Profile from "./pages/profile/Profile.vue";
 import EditProfile from "./pages/profile/EditProfile.vue";
-import Home from "./pages/main/Home.vue";
+import Ads from "./pages/ads/Ads.vue";
 import ServerError from "./pages/exceptions/ServerError.vue";
 import Forbidden from "./pages/exceptions/Forbidden.vue";
 import Unauthorized from "./pages/exceptions/Unauthorized.vue";
 import BadGateway from "./pages/exceptions/BadGateway.vue";
+import AdDetails from "./pages/ads/AdDetails.vue";
 
 const routes = [
-    { path: '/', component: Home },
+    { path: '/', component: Ads },
+    { path: '/ad=:id', component: AdDetails },
     { path: '/about', component: About },
     { path: '/register', component: Register },
     { path: '/login', component: Login },
