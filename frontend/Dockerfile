@@ -1,5 +1,5 @@
 # Используем образ Node.js для сборки проекта
-FROM node:20-alpine AS build
+FROM node:22 AS build
 
 WORKDIR /app
 

@@ -1,5 +1,5 @@
 <template>
   <footer class="footer">
-    <p>© 2025 Онлайн-доска объявлений</p>
+    <p>© 2025 AdPoint</p>
   </footer>
 </template>

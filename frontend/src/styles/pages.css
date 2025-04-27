@@ -1,3 +1,107 @@
+.profile-page {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+.profile-header {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.avatar-block {
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.info-block {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.info-block p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.profile-button {
+    padding: 10px 20px;
+    background-color: #33cccc;
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.profile-button:hover {
+    background-color: #2fb6b6;
+}
+
+.edit-profile-page {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.profile-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Учитывает паддинги и границы в ширине */
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end; /* Располагает элементы справа */
+    gap: 20px; /* Добавляет промежуток между кнопками */
+    margin-top: 20px;
+}
+
+.profile-button__submit {
+    padding: 10px 20px;
+    background-color: #33cccc;
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.profile-button__submit:hover {
+    background-color: #2fb6b6;
+}
+
+.profile-button__cancel {
+    padding: 10px 20px;
+    background-color: #cc4747;
+    border: none;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.profile-button__cancel:hover {
+    background-color: #cc3939;
+}
+
 .about {
     max-width: 800px;
     margin: 30px auto;
@@ -35,33 +139,5 @@
 }
 
 .register-link:hover {
-    text-decoration: underline;
-}
-
-.not-found {
-    text-align: center;
-    margin-top: 12%;
-}
-
-.not-found h1 {
-    font-size: 3rem;
-    color: #33cccc;
-    margin-bottom: 20px;
-}
-
-.not-found p {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 20px;
-}
-
-.go-home-link {
-    color: #00b3b3;
-    font-size: 1.2rem;
-    text-decoration: none;
-    font-weight: 500;
-}
-
-.go-home-link:hover {
     text-decoration: underline;
 }
