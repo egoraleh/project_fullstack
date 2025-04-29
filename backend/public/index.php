@@ -2,12 +2,9 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use app\core\Application;
-
-define('PROJECT_ROOT', dirname(__DIR__));
-
-require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../src/config.php';
 
 $app = new Application();
 

@@ -40,8 +40,9 @@ class Router
     {
         $method = $this->request->getMethod()->value;
         $path = $this->request->getPath();
+
         error_log("METHOD: $method, PATH: $path");
-        error_log("ROUTES POST: " . json_encode(array_keys($this->routes[MethodEnum::POST->value])));
+        error_log("ROUTES $method: " . json_encode(array_keys($this->routes[$method] ?? [])));
 
         $callback = $this->routes[$method][$path] ?? null;
 
@@ -55,4 +56,5 @@ class Router
         $controller = new $class();
         call_user_func([$controller, $action], $this->request, $this->response);
     }
+
 }

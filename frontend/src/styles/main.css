@@ -30,6 +30,16 @@ body {
     margin: 0;
 }
 
+.footer a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+footer a:hover {
+    color: #710a0d;
+}
+
 header {
     background: #33cccc;
     color: #fff;

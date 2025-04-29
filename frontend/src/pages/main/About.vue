@@ -3,21 +3,12 @@
     <div class="greeting">
       <h1>Здравствуйте, {{ username }}!</h1>
     </div>
-
-    <div class="about-platform">
-      <h2 class="about-header">О нашем сервисе</h2>
-      <p>
-        Добро пожаловать на онлайн-доску объявлений! Здесь вы можете быстро и удобно покупать и продавать товары, а также предлагать и находить услуги.
-      </p>
-      <p>
-        Наш сайт позволяет каждому пользователю размещать свои объявления в разных категориях: от недвижимости и автомобилей до электроники и бытовых услуг.
-      </p>
-      <p>
-        Благодаря удобному поиску и фильтрам вы легко найдёте именно то, что вам нужно. А если хотите продать или предложить что-то своё — просто <router-link to="/register" class="register-link">зарегистрируйтесь</router-link> и разместите объявление, это займёт всего пару минут!
-      </p>
-      <p>
-        Мы стремимся создать безопасную и удобную площадку для общения между продавцами и покупателями. Добавляйте товары в избранное, связывайтесь с авторами объявлений и находите выгодные предложения поблизости.
-      </p>
+    <div v-if="aboutData" class="about-platform">
+      <h2 class="about-header">{{ aboutData.title }}</h2>
+      <div v-html="aboutData.description"></div>
+    </div>
+    <div v-else>
+      <p>Загрузка...</p>
     </div>
   </div>
 </template>
@@ -28,6 +19,7 @@ export default {
   data() {
     return {
       username: 'гость',
+      aboutData: null,
     }
   },
   computed: {
@@ -40,6 +32,20 @@ export default {
     if (storedUser) {
       this.username = storedUser
     }
+    this.fetchAboutData()
+  },
+  methods: {
+    async fetchAboutData() {
+      try {
+        const response = await fetch('http://localhost:8000/api/about-page')
+        if (!response.ok) {
+          throw new Error('Ошибка загрузки данных')
+        }
+        this.aboutData = await response.json()
+      } catch (error) {
+        console.error(error)
+      }
+    },
   },
 }
 </script>
