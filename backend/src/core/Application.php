@@ -9,7 +9,11 @@ class Application
     public static Application $app;
     private Request $request;
     private Response $response;
-    private Router $router;
+    public Router $router {
+        get {
+            return $this->router;
+        }
+    }
 
     public function __construct()
     {
@@ -24,8 +28,4 @@ class Application
         $this->router->resolve();
     }
 
-    public function getRouter(): Router
-    {
-        return $this->router;
-    }
 }

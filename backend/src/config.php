@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-use app\controllers\UserController;
 use app\core\Application;
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new Application();
 
-$router = $app->getRouter();
-
-$router->get('/api/about', [UserController::class, 'about']);
-$router->post('/api/register', [UserController::class, 'register']);
+require_once __DIR__ . '/routes/web.php';
 
 return $app;
