@@ -7,43 +7,50 @@ use DateTime;
 
 class FavoriteAd
 {
-    private int $id {
-        get {
-            return $this->id;
-        }
-        set {
-            $this->id = $value;
-        }
-    }
-    private int $adId {
-        get {
-            return $this->adId;
-        }
-        set {
-            $this->adId = $value;
-        }
-    }
-    private int $userId {
-        get {
-            return $this->userId;
-        }
-        set {
-            $this->userId = $value;
-        }
-    }
-    private DateTime $createdAt {
-        get {
-            return $this->createdAt;
-        }
-        set {
-            $this->createdAt = $value;
-        }
-    }
+    private int $id;
+    private int $adId;
+    private int $userId;
+    private DateTime $createdAt;
 
     public function __construct(int $id, int $userId, int $adId, DateTime $createdAt) {
         $this->id = $id;
         $this->adId = $adId;
         $this->userId = $userId;
         $this->createdAt = $createdAt;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getAdId(): int
+    {
+        return $this->adId;
+    }
+
+    public function setAdId(int $adId): void
+    {
+        $this->adId = $adId;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }
