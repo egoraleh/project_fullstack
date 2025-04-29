@@ -9,11 +9,7 @@ class Application
     public static Application $app;
     private Request $request;
     private Response $response;
-    public Router $router {
-        get {
-            return $this->router;
-        }
-    }
+    public Router $router;
 
     public function __construct()
     {
@@ -26,6 +22,21 @@ class Application
     public function run(): void
     {
         $this->router->resolve();
+    }
+
+    public function getRouter(): Router
+    {
+        return $this->router;
+    }
+
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
+    public function getResponse(): Response
+    {
+        return $this->response;
     }
 
 }

@@ -6,62 +6,13 @@ namespace app\models;
 
 class Ad
 {
-    private int $id {
-        get {
-            return $this->id;
-        }
-        set {
-            $this->id = $value;
-        }
-    }
-    private string $title {
-        get {
-            return $this->title;
-        }
-        set {
-            $this->title = $value;
-        }
-    }
-    private int $price {
-        get {
-            return $this->price;
-        }
-        set {
-            $this->price = $value;
-        }
-    }
-    private string $description {
-        get {
-            return $this->description;
-        }
-        set {
-            $this->description = $value;
-        }
-    }
-    private int $userId {
-        get {
-            return $this->userId;
-        }
-        set {
-            $this->userId = $value;
-        }
-    }
-    private int $categoryId {
-        get {
-            return $this->categoryId;
-        }
-        set {
-            $this->categoryId = $value;
-        }
-    }
-    private string $address {
-        get {
-            return $this->address;
-        }
-        set {
-            $this->address = $value;
-        }
-    }
+    private int $id;
+    private string $title;
+    private int $price;
+    private string $description;
+    private int $userId;
+    private int $categoryId;
+    private string $address;
 
     public function __construct(int $id, string $title, int $price,
                                 string $description, int $userId,
@@ -73,6 +24,71 @@ class Ad
         $this->userId = $userId;
         $this->categoryId = $categoryId;
         $this->address = $address;
+    }
+
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address): void
+    {
+        $this->address = $address;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+    public function setPrice(int $price): void
+    {
+        $this->price = $price;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): void
+    {
+        $this->userId = $userId;
+    }
+
+    public function getCategoryId(): int
+    {
+        return $this->categoryId;
+    }
+
+    public function setCategoryId(int $categoryId): void
+    {
+        $this->categoryId = $categoryId;
     }
 
 }

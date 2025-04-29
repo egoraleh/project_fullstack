@@ -6,70 +6,14 @@ namespace app\models;
 
 class User
 {
-    private int $id {
-        get {
-            return $this->id;
-        }
-        set {
-            $this->id = $value;
-        }
-    }
-    private string $name {
-        get {
-            return $this->name;
-        }
-        set {
-            $this->name = $value;
-        }
-    }
-    private string $surname {
-        get {
-            return $this->surname;
-        }
-        set {
-            $this->surname = $value;
-        }
-    }
-    private string $email {
-        get {
-            return $this->email;
-        }
-        set {
-            $this->email = $value;
-        }
-    }
-    private string $password {
-        get {
-            return $this->password;
-        }
-        set {
-            $this->password = $value;
-        }
-    }
-    private string $role {
-        get {
-            return $this->role;
-        }
-        set {
-            $this->role = $value;
-        }
-    }
-    private string $phoneNumber {
-        get {
-            return $this->phoneNumber;
-        }
-        set {
-            $this->phoneNumber = $value;
-        }
-    }
-    private string $avatarUrl {
-        get {
-            return $this->avatarUrl;
-        }
-        set {
-            $this->avatarUrl = $value;
-        }
-    }
+    private int $id;
+    private string $name;
+    private string $surname;
+    private string $email;
+    private string $password;
+    private string $role;
+    private string $phoneNumber;
+    private string $avatarUrl;
 
     public function __construct(int $id, string $name, string $surname,
                                 string $email, string $password, string $role,
@@ -82,5 +26,80 @@ class User
         $this->role = $role;
         $this->phoneNumber = $phoneNumber;
         $this->avatarUrl = $avatarUrl;
+    }
+
+    public function getAvatarUrl(): string
+    {
+        return $this->avatarUrl;
+    }
+
+    public function setAvatarUrl(string $avatarUrl): void
+    {
+        $this->avatarUrl = $avatarUrl;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): void
+    {
+        $this->email = $email;
+    }
+
+    public function getPhoneNumber(): string
+    {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(string $phoneNumber): void
+    {
+        $this->phoneNumber = $phoneNumber;
+    }
+
+    public function getSurname(): string
+    {
+        return $this->surname;
+    }
+
+    public function setSurname(string $surname): void
+    {
+        $this->surname = $surname;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): void
+    {
+        $this->password = $password;
+    }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
+
+    public function setRole(string $role): void
+    {
+        $this->role = $role;
     }
 }
