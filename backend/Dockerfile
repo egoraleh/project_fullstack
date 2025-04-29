@@ -5,7 +5,7 @@ FROM php:8.0-apache
 RUN docker-php-ext-install pdo pdo_mysql
 
 # Копируем файлы проекта в контейнер
-COPY ./backend /var/www/html/
+COPY . /var/www/html/
 
 # Открываем порт для веб-сервера
 EXPOSE 80
