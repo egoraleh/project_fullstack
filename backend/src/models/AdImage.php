@@ -8,11 +8,13 @@ class AdImage
 {
     private int $id;
     private int $adId;
+    private int $position;
     private string $url;
 
-    public function __construct(int $id, int $adId, string $url) {
+    public function __construct(int $id, int $adId, int $position, string $url) {
         $this->id = $id;
         $this->adId = $adId;
+        $this->position = $position;
         $this->url = $url;
     }
 
@@ -39,5 +41,15 @@ class AdImage
     public function setAdId(int $adId): void
     {
         $this->adId = $adId;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): void
+    {
+        $this->position = $position;
     }
 }
