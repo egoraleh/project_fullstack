@@ -28,6 +28,7 @@ class User
         $this->avatarUrl = $avatarUrl;
     }
 
+
     public function getAvatarUrl(): string
     {
         return $this->avatarUrl;
@@ -101,5 +102,10 @@ class User
     public function setRole(string $role): void
     {
         $this->role = $role;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
     }
 }

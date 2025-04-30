@@ -3,18 +3,18 @@
     <h2 class="sign-header">Регистрация</h2>
     <form class="sign-form" @submit.prevent="register">
       <div class="form-group">
-        <label for="firstname">Имя:</label>
-        <input type="text" id="firstname" v-model="form.firstname" required />
-      </div>
-
-      <div class="form-group">
-        <label for="lastname">Фамилия:</label>
-        <input type="text" id="lastname" v-model="form.lastname" required />
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email:</label>
+        <label for="email">E-mail:</label>
         <input type="email" id="email" v-model="form.email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" v-model="form.password" required />
+      </div>
+
+      <div class="form-group">
+        <label for="repeatedPassword">Подтверждение пароля:</label>
+        <input type="password" id="repeatedPassword" v-model="form.repeatedPassword" required />
       </div>
 
       <button type="submit" class="sign-btn">Зарегистрироваться</button>
@@ -34,20 +34,35 @@ export default {
   data() {
     return {
       form: {
-        firstname: '',
-        lastname: '',
-        email: ''
+        email: '',
+        password: '',
+        repeatedPassword: '',
       }
     }
   },
   methods: {
     async register() {
+      if (this.form.password !== this.form.repeatedPassword) {
+        alert('Пароли не совпадают.');
+        return;
+      }
+
       try {
-        const response = await axios.post('/api/register', this.form);
+        const response = await axios.post('/api/register', {
+          email: this.form.email,
+          password: this.form.password
+        });
+
         alert('Регистрация успешна: ' + response.data.message);
+        this.$router.push('/login');
+
       } catch (error) {
         console.error(error);
-        alert('Произошла ошибка при регистрации.');
+        if (error.response && error.response.data && error.response.data.error) {
+          alert('Ошибка: ' + error.response.data.error);
+        } else {
+          alert('Произошла ошибка при регистрации.');
+        }
       }
     }
   }

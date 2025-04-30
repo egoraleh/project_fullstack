@@ -1,8 +1,8 @@
 CREATE TABLE users
 (
     id           bigserial PRIMARY KEY,
-    name         varchar(50)             NOT NULL,
-    surname      varchar(70)             NOT NULL,
+    name         varchar(50),
+    surname      varchar(70),
     role         char(5) DEFAULT 'basic' NOT NULL,
     email        varchar(50) UNIQUE      NOT NULL,
     avatar_path  varchar,

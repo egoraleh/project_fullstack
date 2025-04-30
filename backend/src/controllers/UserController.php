@@ -6,24 +6,44 @@ namespace app\controllers;
 
 use app\core\Request;
 use app\core\Response;
+use app\models\User;
+use app\database\dao\UserDAO;
 
 class UserController
 {
-    public function about(Request $request, Response $response): void
-    {
-        $response->json([
-            'title' => 'О проекте',
-            'description' => 'Это онлайн-доска объявлений, где пользователи могут размещать и искать объявления о продаже товаров и услуг.',
-        ]);
-    }
-
     public function register(Request $request, Response $response): void
     {
-        echo "Пользователь зарегистрирован";
         $data = $request->getBody();
+        var_dump($data); // Чтобы увидеть, что приходит в запросе
+
+        $email = $data['email'] ?? null;
+        $password = $data['password'] ?? null;
+
+        $userDao = new UserDAO();
+        $existingUser = $userDao->getByEmail($email);
+
+        if ($existingUser) {
+            $response->json(['error' => 'Пользователь с таким email уже существует.']);
+            return;
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $user = new User(
+            0,
+            '',
+            '',
+            $email,
+            $hashedPassword,
+            'basic',
+            '',
+            '/uploads/avatars/default.png'
+        );
+
+        $userDao->save($user);
+
         $response->json([
-            'message' => 'Пользователь успешно зарегистрирован',
-            'data' => $data,
+            'message' => 'Пользователь успешно зарегистрирован'
         ]);
     }
 }
