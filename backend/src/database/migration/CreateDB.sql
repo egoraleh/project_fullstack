@@ -1,13 +1,13 @@
 CREATE TABLE users
 (
     id           bigserial PRIMARY KEY,
-    name         varchar(50),
-    surname      varchar(70),
+    name         varchar(50)             NOT NULL,
+    surname      varchar(70)             NOT NULL,
     role         char(5) DEFAULT 'basic' NOT NULL,
     email        varchar(50) UNIQUE      NOT NULL,
     avatar_path  varchar,
     password     varchar(255)            NOT NULL,
-    phone_number char(12)
+    phone_number char(12) UNIQUE
 );
 
 CREATE TABLE categories
@@ -29,10 +29,10 @@ CREATE TABLE ads
 
 CREATE TABLE ad_images
 (
-    id    bigserial PRIMARY KEY,
-    ad_id bigint  NOT NULL REFERENCES ads (id) ON DELETE CASCADE,
+    id       bigserial PRIMARY KEY,
+    ad_id    bigint   NOT NULL REFERENCES ads (id) ON DELETE CASCADE,
     position smallint NOT NULL,
-    url   varchar NOT NULL
+    url      varchar  NOT NULL
 );
 
 CREATE TABLE favorite_ads
