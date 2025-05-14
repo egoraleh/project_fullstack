@@ -4,13 +4,22 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\core\Application;
+use app\core\Logger;
 use app\core\Request;
 use app\core\Response;
 
 class AboutController
 {
+    private Logger $logger;
+    public function __construct()
+    {
+        $this->logger = Application::$app->getLogger();
+    }
     public function getView(Request $request, Response $response): void
     {
+        $this->logger->debug('About page accessed');
+
         $data = [
             'title' => 'О нашем сервисе',
             'description' => '<p>
@@ -27,5 +36,6 @@ class AboutController
             </p>'
         ];
         $response->json($data);
+        $this->logger->debug('About page response sent');
     }
 }

@@ -37,7 +37,7 @@ export default {
   methods: {
     async fetchAboutData() {
       try {
-        const response = await fetch('http://localhost:8000/api/about-page')
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/about-page`)
         if (!response.ok) {
           throw new Error('Ошибка загрузки данных')
         }

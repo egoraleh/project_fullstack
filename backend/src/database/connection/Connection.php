@@ -10,11 +10,11 @@ class Connection {
 
     public static function getConnection(): PDO {
         if (self::$pdo === null) {
-            $host = 'localhost';
-            $db   = 'adpoint_php';
-            $user = 'postgres';
-            $pass = 'postgres';
-            $port = '5432';
+            $host = getenv('DB_HOST');
+            $port = getenv('DB_PORT');
+            $db   = getenv('DB_NAME');
+            $user = getenv('DB_USER');
+            $pass = getenv('DB_PASS');
 
             try {
                 self::$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$db", $user, $pass);

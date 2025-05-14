@@ -14,5 +14,13 @@
         }
     },
     "minimum-stability": "dev",
-    "require": {}
+    "require": {
+      "ext-simplexml": "*",
+      "ext-libxml": "*",
+        "vlucas/phpdotenv": "^5.6@dev",
+      "ext-pdo": "*",
+        "phpoption/phpoption": "^1.9@dev",
+        "psr/log": "^3.0@dev",
+        "monolog/monolog": "^3.0@dev"
+    }
 }

@@ -1,5 +1,9 @@
 backend/vendor
 frontend/node_modules
+backend/.env
+frontend/.env.development
+backend/runtime
+backend/config.json
 .git
 .idea
 project_fullstack.iml
