@@ -13,10 +13,11 @@ class Ad
     private int $userId;
     private int $categoryId;
     private string $address;
+    private string $imageUrl;
 
     public function __construct(int $id, string $title, int $price,
                                 string $description, int $userId,
-                                int $categoryId, string $address) {
+                                int $categoryId, string $address, string $imageUrl) {
         $this->id = $id;
         $this->title = $title;
         $this->price = $price;
@@ -24,6 +25,7 @@ class Ad
         $this->userId = $userId;
         $this->categoryId = $categoryId;
         $this->address = $address;
+        $this->imageUrl = $imageUrl;
     }
 
     public function getAddress(): string
@@ -89,6 +91,16 @@ class Ad
     public function setCategoryId(int $categoryId): void
     {
         $this->categoryId = $categoryId;
+    }
+
+    public function getImageUrl(): string
+    {
+        return $this->imageUrl;
+    }
+
+    public function setImageUrl(string $imageUrl): void
+    {
+        $this->imageUrl = $imageUrl;
     }
 
 }

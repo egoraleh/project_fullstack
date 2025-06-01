@@ -2,17 +2,20 @@
 
 namespace app\database\dao;
 
+use app\core\DAOInterface;
 use app\database\connection\Connection;
 use app\models\Category;
 use PDO;
+use http\Exception\InvalidArgumentException;
 
-class CategoryDAO
+class CategoryDAO implements DAOInterface
 {
     private PDO $pdo;
 
-    private const string SQL_GET_ALL   = "SELECT * FROM categories ORDER BY name";
+    private const string SQL_GET_ALL   = "SELECT * FROM categories";
     private const string SQL_GET_BY_ID = "SELECT * FROM categories WHERE id = :id";
     private const string SQL_INSERT    = "INSERT INTO categories (name) VALUES (:name)";
+    private const string SQL_UPDATE    = "UPDATE categories SET name = :name WHERE id = :id";
     private const string SQL_DELETE    = "DELETE FROM categories WHERE id = :id";
 
     public function __construct()
@@ -20,51 +23,49 @@ class CategoryDAO
         $this->pdo = Connection::getConnection();
     }
 
-    /**
-     * Получить все категории
-     */
-    public function getAll(): array
+    public function getAll(): ?array
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_ALL);
         $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $categories = [];
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $categories[] = new Category(
-                (int)$row['id'],
-                $row['name']
-            );
-        }
-
-        return $categories;
+        return $rows ?: null;
     }
 
-    /**
-     * Получить категорию по ID
-     */
-    public function getById(int $id): ?Category
+    public function get(int $id): ?array
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_BY_ID);
         $stmt->execute(['id' => $id]);
-
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $row ? new Category((int)$row['id'], $row['name']) : null;
+        return $row ?: null;
     }
 
-    /**
-     * Добавить категорию
-     */
-    public function save(Category $category): void
+    public function save(object $category): void
     {
-        $stmt = $this->pdo->prepare(self::SQL_INSERT);
-        $stmt->execute(['name' => $category->getName()]);
+        if ($category instanceof Category) {
+            $stmt = $this->pdo->prepare(self::SQL_INSERT);
+            $stmt->execute([
+                'name' => $category->getName()
+            ]);
+        } else {
+            throw new InvalidArgumentException('Expected instance of Category');
+        }
     }
 
-    /**
-     * Удалить категорию по ID
-     */
+    public function update(object $category): void
+    {
+        if ($category instanceof Category) {
+            $stmt = $this->pdo->prepare(self::SQL_UPDATE);
+            $stmt->execute([
+                'name' => $category->getName(),
+                'id'   => $category->getId()
+            ]);
+        } else {
+            throw new InvalidArgumentException('Expected instance of Category');
+        }
+    }
+
     public function delete(int $id): void
     {
         $stmt = $this->pdo->prepare(self::SQL_DELETE);

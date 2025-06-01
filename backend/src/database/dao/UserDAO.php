@@ -2,11 +2,13 @@
 
 namespace app\database\dao;
 
+use app\core\DAOInterface;
 use app\database\connection\Connection;
 use app\models\User;
+use http\Exception\InvalidArgumentException;
 use PDO;
 
-class UserDAO
+class UserDAO implements DAOInterface
 {
     private PDO $pdo;
 
@@ -18,6 +20,15 @@ class UserDAO
         (name, surname, email, password, role, phone_number, avatar_path) 
         VALUES 
         (:name, :surname, :email, :password, :role, :phone_number, :avatar_path)";
+    private const string SQL_UPDATE         = "UPDATE users SET
+        name = :name,
+        surname = :surname,
+        email = :email,
+        password = :password,
+        role = :role,
+        phone_number = :phone_number,
+        avatar_path = :avatar_path
+        WHERE id = :id";
     private const string SQL_DELETE         = "DELETE FROM users WHERE id = :id";
 
     public function __construct()
@@ -25,103 +36,79 @@ class UserDAO
         $this->pdo = Connection::getConnection();
     }
 
-    /**
-     * Получить всех пользователей
-     */
-    public function getAll(): array
+    public function getAll(): ?array
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_ALL);
         $stmt->execute();
-
-        $users = [];
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $users[] = $this->mapRowToUser($row);
-        }
-
-        return $users;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Получить пользователя по ID
-     */
-    public function getById(int $id): ?User
+    public function get(int $id): ?array
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_BY_ID);
         $stmt->execute(['id' => $id]);
-
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $row ? $this->mapRowToUser($row) : null;
+        return $row ?: null;
     }
 
-    /**
-     * Получить пользователя по Email
-     */
-    public function getByEmail(string $email): ?User
+    public function getByEmail(string $email): ?array
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_BY_EMAIL);
         $stmt->execute(['email' => $email]);
-
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $row ? $this->mapRowToUser($row) : null;
+        return $row ?: null;
     }
 
-    /**
-     * Получить пользователя по номеру телефона
-     */
-    public function getByPhoneNumber(string $phoneNumber): ?User
+    public function getByPhoneNumber(string $phoneNumber): ?array
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_BY_PHONE);
         $stmt->execute(['phone_number' => $phoneNumber]);
-
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        return $row ? $this->mapRowToUser($row) : null;
+        return $row ?: null;
     }
 
-    /**
-     * Добавить нового пользователя
-     */
-    public function save(User $user): void
+    public function save(object $user): void
     {
-        $stmt = $this->pdo->prepare(self::SQL_INSERT);
+        if ($user instanceof User) {
+            $stmt = $this->pdo->prepare(self::SQL_INSERT);
 
-        $stmt->execute([
-            'name'         => $user->getName(),
-            'surname'      => $user->getSurname(),
-            'email'        => $user->getEmail(),
-            'password'     => $user->getPassword(),
-            'role'         => $user->getRole(),
-            'phone_number' => $user->getPhoneNumber(),
-            'avatar_path'  => $user->getAvatarUrl()
-        ]);
+            $stmt->execute([
+                'name' => $user->getName(),
+                'surname' => $user->getSurname(),
+                'email' => $user->getEmail(),
+                'password' => $user->getPassword(),
+                'role' => $user->getRole(),
+                'phone_number' => $user->getPhoneNumber(),
+                'avatar_path' => $user->getAvatarUrl()
+            ]);
+        } else {
+            throw new InvalidArgumentException('Expected instance of User');
+        }
     }
 
-    /**
-     * Удалить пользователя по ID
-     */
     public function delete(int $id): void
     {
         $stmt = $this->pdo->prepare(self::SQL_DELETE);
         $stmt->execute(['id' => $id]);
     }
 
-    /**
-     * Преобразование строки из БД в объект User
-     */
-    private function mapRowToUser(array $row): User
+    public function update(object $user): void
     {
-        return new User(
-            (int)$row['id'],
-            $row['name'],
-            $row['surname'],
-            $row['email'],
-            $row['password'],
-            $row['role'],
-            $row['phone_number'],
-            $row['avatar_path'] ?? ''
-        );
+        if ($user instanceof User) {
+            $stmt = $this->pdo->prepare(self::SQL_UPDATE);
+
+            $stmt->execute([
+                'name'         => $user->getName(),
+                'surname'      => $user->getSurname(),
+                'email'        => $user->getEmail(),
+                'password'     => $user->getPassword(),
+                'role'         => $user->getRole(),
+                'phone_number' => $user->getPhoneNumber(),
+                'avatar_path'  => $user->getAvatarUrl(),
+                'id'           => $user->getId()
+            ]);
+        } else {
+            throw new InvalidArgumentException('Expected instance of User');
+        }
     }
 }

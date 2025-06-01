@@ -2,82 +2,76 @@
 
 namespace app\database\dao;
 
+use app\core\DAOInterface;
 use app\database\connection\Connection;
 use app\models\FavoriteAd;
+use DateMalformedStringException;
+use http\Exception\InvalidArgumentException;
 use PDO;
 use DateTime;
 
-class FavoriteAdDAO
+class FavoriteAdDAO implements DAOInterface
 {
     private PDO $pdo;
 
     private const string SQL_GET_BY_USER_ID = "SELECT * FROM favorite_ads WHERE user_id = :user_id ORDER BY created_at DESC";
+    private const string SQL_GET            = "SELECT * FROM favorite_ads WHERE id = :id ORDER BY created_at DESC";
     private const string SQL_INSERT         = "INSERT INTO favorite_ads (user_id, ad_id) VALUES (:user_id, :ad_id)";
-    private const string SQL_DELETE         = "DELETE FROM favorite_ads WHERE user_id = :user_id AND ad_id = :ad_id";
-    private const string SQL_EXISTS         = "SELECT COUNT(*) FROM favorite_ads WHERE user_id = :user_id AND ad_id = :ad_id";
+    private const string SQL_UPDATE         = "UPDATE favorite_ads SET ad_id = :ad_id, user_id = :user_id WHERE id = :id";
+    private const string SQL_DELETE         = "DELETE FROM favorite_ads WHERE id = :id";
 
     public function __construct()
     {
         $this->pdo = Connection::getConnection();
     }
 
-    /**
-     * Получить все избранные объявления пользователя
-     */
-    public function getByUserId(int $userId): array
+    public function getByUserId(int $id): ?array
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_BY_USER_ID);
-        $stmt->execute(['user_id' => $userId]);
-
-        $favorites = [];
-
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $favorites[] = new FavoriteAd(
-                (int)$row['id'],
-                (int)$row['user_id'],
-                (int)$row['ad_id'],
-                new DateTime($row['created_at'])
-            );
-        }
-
-        return $favorites;
+        $stmt->execute(['user_id' => $id]);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $row ?: null;
     }
 
-    /**
-     * Добавить объявление в избранное
-     */
-    public function save(FavoriteAd $favoriteAd): void
+    public function get(int $id): ?array
     {
-        $stmt = $this->pdo->prepare(self::SQL_INSERT);
-        $stmt->execute([
-            'user_id' => $favoriteAd->getUserId(),
-            'ad_id'   => $favoriteAd->getAdId()
-        ]);
+        $stmt = $this->pdo->prepare(self::SQL_GET);
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ?: null;
     }
 
-    /**
-     * Удалить объявление из избранного
-     */
-    public function delete(int $userId, int $adId): void
+    public function save(object $entity): void
+    {
+        if ($entity instanceof FavoriteAd) {
+            $stmt = $this->pdo->prepare(self::SQL_INSERT);
+            $stmt->execute([
+                'user_id' => $entity->getUserId(),
+                'ad_id' => $entity->getAdId(),
+                'created_at' => $entity->getCreatedAt()
+            ]);
+        } else {
+            throw new InvalidArgumentException('Expected instance of FavoriteAd');
+        }
+    }
+
+    public function delete(int $id): void
     {
         $stmt = $this->pdo->prepare(self::SQL_DELETE);
-        $stmt->execute([
-            'user_id' => $userId,
-            'ad_id'   => $adId
-        ]);
+        $stmt->execute(['id' => $id]);
     }
 
-    /**
-     * Проверить, есть ли объявление в избранном у пользователя
-     */
-    public function exists(int $userId, int $adId): bool
+    public function update(object $entity): void
     {
-        $stmt = $this->pdo->prepare(self::SQL_EXISTS);
-        $stmt->execute([
-            'user_id' => $userId,
-            'ad_id'   => $adId
-        ]);
-
-        return (bool)$stmt->fetchColumn();
+        if ($entity instanceof FavoriteAd) {
+            $stmt = $this->pdo->prepare(self::SQL_UPDATE);
+            $stmt->execute([
+                'ad_id' => $entity->getAdId(),
+                'user_id' => $entity->getUserId(),
+                'id' => $entity->getId()
+            ]);
+        } else {
+            throw new InvalidArgumentException('Expected instance of FavoriteAd');
+        }
     }
 }
