@@ -24,15 +24,8 @@ CREATE TABLE ads
     description text         NOT NULL,
     category_id bigint       NOT NULL REFERENCES categories (id),
     price       int          NOT NULL,
-    address     varchar      NOT NULL
-);
-
-CREATE TABLE ad_images
-(
-    id       bigserial PRIMARY KEY,
-    ad_id    bigint   NOT NULL REFERENCES ads (id) ON DELETE CASCADE,
-    position smallint NOT NULL,
-    url      varchar  NOT NULL
+    address     varchar      NOT NULL,
+    image_url   varchar      NOT NULL
 );
 
 CREATE TABLE favorite_ads
