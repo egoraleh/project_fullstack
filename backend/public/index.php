@@ -19,13 +19,13 @@ use app\core\Template;
 Template::$cache_enabled = true;
 Template::ClearCache();
 
-if (getenv('APP_ENV') === 'development') {
-    error_reporting(E_ALL);
-    ini_set('display_errors', '1');
-}
-
 try {
     $app = new Application();
+
+    if (getenv('APP_ENV') === 'development') {
+        error_reporting(E_ALL);
+        ini_set('display_errors', '1');
+    }
 
     $app->getLogger()->info('Application bootstrap completed', [
         'php_version' => PHP_VERSION,

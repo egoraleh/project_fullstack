@@ -12,15 +12,15 @@ class UserDAO implements DAOInterface
 {
     private PDO $pdo;
 
-    private const string SQL_GET_ALL        = "SELECT * FROM users";
-    private const string SQL_GET_BY_ID      = "SELECT * FROM users WHERE id = :id";
-    private const string SQL_GET_BY_EMAIL   = "SELECT * FROM users WHERE email = :email";
-    private const string SQL_GET_BY_PHONE       = "SELECT * FROM users WHERE phone_number = :phone_number";
-    private const string SQL_INSERT         = "INSERT INTO users 
+    private const SQL_GET_ALL        = "SELECT * FROM users";
+    private const SQL_GET_BY_ID      = "SELECT * FROM users WHERE id = :id";
+    private const SQL_GET_BY_EMAIL   = "SELECT * FROM users WHERE email = :email";
+    private const SQL_GET_BY_PHONE       = "SELECT * FROM users WHERE phone_number = :phone_number";
+    private const SQL_INSERT         = "INSERT INTO users 
         (name, surname, email, password, role, phone_number, avatar_path) 
         VALUES 
         (:name, :surname, :email, :password, :role, :phone_number, :avatar_path)";
-    private const string SQL_UPDATE         = "UPDATE users SET
+    private const SQL_UPDATE         = "UPDATE users SET
         name = :name,
         surname = :surname,
         email = :email,
@@ -29,7 +29,7 @@ class UserDAO implements DAOInterface
         phone_number = :phone_number,
         avatar_path = :avatar_path
         WHERE id = :id";
-    private const string SQL_DELETE         = "DELETE FROM users WHERE id = :id";
+    private const SQL_DELETE         = "DELETE FROM users WHERE id = :id";
 
     public function __construct()
     {

@@ -5,20 +5,18 @@ namespace app\database\dao;
 use app\core\DAOInterface;
 use app\database\connection\Connection;
 use app\models\FavoriteAd;
-use DateMalformedStringException;
 use http\Exception\InvalidArgumentException;
 use PDO;
-use DateTime;
 
 class FavoriteAdDAO implements DAOInterface
 {
     private PDO $pdo;
 
-    private const string SQL_GET_BY_USER_ID = "SELECT * FROM favorite_ads WHERE user_id = :user_id ORDER BY created_at DESC";
-    private const string SQL_GET            = "SELECT * FROM favorite_ads WHERE id = :id ORDER BY created_at DESC";
-    private const string SQL_INSERT         = "INSERT INTO favorite_ads (user_id, ad_id) VALUES (:user_id, :ad_id)";
-    private const string SQL_UPDATE         = "UPDATE favorite_ads SET ad_id = :ad_id, user_id = :user_id WHERE id = :id";
-    private const string SQL_DELETE         = "DELETE FROM favorite_ads WHERE id = :id";
+    private const SQL_GET_BY_USER_ID = "SELECT * FROM favorite_ads WHERE user_id = :user_id ORDER BY created_at DESC";
+    private const SQL_GET            = "SELECT * FROM favorite_ads WHERE id = :id ORDER BY created_at DESC";
+    private const SQL_INSERT         = "INSERT INTO favorite_ads (user_id, ad_id) VALUES (:user_id, :ad_id)";
+    private const SQL_UPDATE         = "UPDATE favorite_ads SET ad_id = :ad_id, user_id = :user_id WHERE id = :id";
+    private const SQL_DELETE         = "DELETE FROM favorite_ads WHERE id = :id";
 
     public function __construct()
     {

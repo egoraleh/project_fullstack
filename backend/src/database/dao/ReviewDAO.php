@@ -5,8 +5,6 @@ namespace app\database\dao;
 use app\core\DAOInterface;
 use app\database\connection\Connection;
 use app\models\Review;
-use DateMalformedStringException;
-use DateTime;
 use http\Exception\InvalidArgumentException;
 use PDO;
 
@@ -14,11 +12,11 @@ class ReviewDAO implements DAOInterface
 {
     private PDO $pdo;
 
-    private const string SQL_GET_BY_ID            = "SELECT * FROM reviews WHERE id = :id";
-    private const string SQL_GET_BY_RECEIVER_ID   = "SELECT * FROM reviews WHERE receiver_id = :receiver_id ORDER BY created_at DESC";
-    private const string SQL_INSERT               = "INSERT INTO reviews (author_id, receiver_id, ad_id, created_at, text, rating)
+    private const SQL_GET_BY_ID            = "SELECT * FROM reviews WHERE id = :id";
+    private const SQL_GET_BY_RECEIVER_ID   = "SELECT * FROM reviews WHERE receiver_id = :receiver_id ORDER BY created_at DESC";
+    private const SQL_INSERT               = "INSERT INTO reviews (author_id, receiver_id, ad_id, created_at, text, rating)
                                               VALUES (:author_id, :receiver_id, :ad_id, :created_at, :text, :rating)";
-    private const string SQL_UPDATE               = "UPDATE reviews SET
+    private const SQL_UPDATE               = "UPDATE reviews SET
                 author_id = :author_id, 
                 receiver_id = :receiver_id, 
                 ad_id = :ad_id, 

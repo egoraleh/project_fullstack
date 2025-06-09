@@ -7,17 +7,17 @@ namespace app\models;
 class User
 {
     private int $id;
-    private string $name;
-    private string $surname;
+    private mixed $name;
+    private mixed $surname;
     private string $email;
     private string $password;
     private string $role;
-    private string $phoneNumber;
+    private mixed $phoneNumber;
     private string $avatarUrl;
 
-    public function __construct(int $id, string $name, string $surname,
+    public function __construct(int $id, mixed $name, mixed $surname,
                                 string $email, string $password, string $role,
-                                string $phoneNumber, string $avatarUrl) {
+                                mixed $phoneNumber, string $avatarUrl) {
         $this->id = $id;
         $this->name = $name;
         $this->surname = $surname;
@@ -44,7 +44,7 @@ class User
         return $this->id;
     }
 
-    public function getName(): string
+    public function getName(): mixed
     {
         return $this->name;
     }
@@ -64,7 +64,7 @@ class User
         $this->email = $email;
     }
 
-    public function getPhoneNumber(): string
+    public function getPhoneNumber(): mixed
     {
         return $this->phoneNumber;
     }
@@ -74,7 +74,7 @@ class User
         $this->phoneNumber = $phoneNumber;
     }
 
-    public function getSurname(): string
+    public function getSurname(): mixed
     {
         return $this->surname;
     }

@@ -12,10 +12,10 @@ class AdDAO implements DAOInterface
 {
     private PDO $pdo;
 
-    private const string SQL_GET_ALL        = "SELECT * FROM ads";
-    private const string SQL_GET_BY_ID      = "SELECT * FROM ads WHERE id = :id";
-    private const string SQL_GET_BY_USER_ID = "SELECT * FROM ads WHERE user_id = :user_id";
-    private const string SQL_INSERT         = "INSERT INTO ads (title, price, description, user_id, category_id, address, image_url)
+    private const SQL_GET_ALL        = "SELECT * FROM ads";
+    private const SQL_GET_BY_ID      = "SELECT * FROM ads WHERE id = :id";
+    private const SQL_GET_BY_USER_ID = "SELECT * FROM ads WHERE user_id = :user_id";
+    private const SQL_INSERT         = "INSERT INTO ads (title, price, description, user_id, category_id, address, image_url)
                                         VALUES (:title, :price, :description, :user_id, :category_id, :address, :image_url)";
     private const string SQL_UPDATE         = "UPDATE ads SET 
                title = :title, 

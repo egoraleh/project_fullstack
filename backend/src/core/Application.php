@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace app\core;
 
 use app\enums\HttpStatusCodeEnum;
-use Dotenv\Dotenv;
 use Exception;
 use RuntimeException;
 use Throwable;
@@ -43,9 +42,6 @@ class Application
     private function loadConfiguration(): void
     {
         try {
-            $dotenv = Dotenv::createImmutable(__DIR__.'/../../');
-            $dotenv->load();
-
             $configPath = __DIR__.'/../../config.json';
             if (file_exists($configPath)) {
                 ConfigParser::load($configPath);

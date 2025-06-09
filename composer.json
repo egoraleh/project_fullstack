@@ -1,6 +1,0 @@
-{
-    "require": {
-        "monolog/monolog": "^3.9",
-      "ext-http": "*"
-    }
-}

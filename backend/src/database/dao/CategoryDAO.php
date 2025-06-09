@@ -12,11 +12,11 @@ class CategoryDAO implements DAOInterface
 {
     private PDO $pdo;
 
-    private const string SQL_GET_ALL   = "SELECT * FROM categories";
-    private const string SQL_GET_BY_ID = "SELECT * FROM categories WHERE id = :id";
-    private const string SQL_INSERT    = "INSERT INTO categories (name) VALUES (:name)";
-    private const string SQL_UPDATE    = "UPDATE categories SET name = :name WHERE id = :id";
-    private const string SQL_DELETE    = "DELETE FROM categories WHERE id = :id";
+    private const SQL_GET_ALL   = "SELECT * FROM categories";
+    private const SQL_GET_BY_ID = "SELECT * FROM categories WHERE id = :id";
+    private const SQL_INSERT    = "INSERT INTO categories (name) VALUES (:name)";
+    private const SQL_UPDATE    = "UPDATE categories SET name = :name WHERE id = :id";
+    private const SQL_DELETE    = "DELETE FROM categories WHERE id = :id";
 
     public function __construct()
     {
