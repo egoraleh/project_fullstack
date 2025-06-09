@@ -8,3 +8,4 @@ backend/config.json
 .git
 .idea
 project_fullstack.iml
+backend/cache

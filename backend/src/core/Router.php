@@ -88,6 +88,11 @@ class Router
         }
     }
 
+    public function renderTemplate(string $name, array $data=[]): void
+    {
+        Template::View($name.'.html', $data);
+    }
+
     public function getRoutes(): array
     {
         return $this->routes;

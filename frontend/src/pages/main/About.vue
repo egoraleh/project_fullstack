@@ -3,10 +3,7 @@
     <div class="greeting">
       <h1>Здравствуйте, {{ username }}!</h1>
     </div>
-    <div v-if="aboutData" class="about-platform">
-      <h2 class="about-header">{{ aboutData.title }}</h2>
-      <div v-html="aboutData.description"></div>
-    </div>
+    <div v-if="aboutHtml" v-html="aboutHtml"></div>
     <div v-else>
       <p>Загрузка...</p>
     </div>
@@ -19,33 +16,26 @@ export default {
   data() {
     return {
       username: 'гость',
-      aboutData: null,
+      aboutHtml: null,
     }
-  },
-  computed: {
-    isGuest() {
-      return this.username === 'гость'
-    },
   },
   mounted() {
-    const storedUser = localStorage.getItem('username')
+    const storedUser = localStorage.getItem('username');
     if (storedUser) {
-      this.username = storedUser
+      this.username = storedUser;
     }
-    this.fetchAboutData()
+    this.fetchAboutHtml();
   },
   methods: {
-    async fetchAboutData() {
+    async fetchAboutHtml() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/about-page`)
-        if (!response.ok) {
-          throw new Error('Ошибка загрузки данных')
-        }
-        this.aboutData = await response.json()
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/about-page`);
+        if (!response.ok) throw new Error('Ошибка загрузки данных');
+        this.aboutHtml = await response.text();
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
-    },
-  },
+    }
+  }
 }
 </script>

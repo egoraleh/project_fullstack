@@ -8,6 +8,7 @@ use app\core\Application;
 use app\core\Logger;
 use app\core\Request;
 use app\core\Response;
+use app\core\Template;
 
 class AboutController
 {
@@ -21,7 +22,7 @@ class AboutController
         $this->logger->debug('About page accessed');
 
         $data = [
-            'title' => 'О нашем сервисе',
+            'title'       => 'О нашем сервисе',
             'description' => '<p>
                 Добро пожаловать на онлайн-доску объявлений! Здесь вы можете быстро и удобно покупать и продавать товары, а также предлагать и находить услуги.
             </p>
@@ -35,7 +36,14 @@ class AboutController
                 Мы стремимся создать безопасную и удобную площадку для общения между продавцами и покупателями. Добавляйте товары в избранное, связывайтесь с авторами объявлений и находите выгодные предложения поблизости.
             </p>'
         ];
-        $response->json($data);
+
+        ob_start();
+        Template::View('about.html', $data);
+        $html = ob_get_clean();
+
+        $response->setStatusCode(\app\enums\HttpStatusCodeEnum::HTTP_OK);
+        header('Content-Type: text/html; charset=utf-8');
+        echo $html;
         $this->logger->debug('About page response sent');
     }
 }

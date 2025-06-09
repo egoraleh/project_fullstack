@@ -1,9 +1,23 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+if (php_sapi_name()==='cli-server') {
+    $url  = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $file = __DIR__ . $url;
+    if (is_file($file)) {
+        return false;
+    }
+}
+
+const PROJECT_ROOT = __DIR__ . "/../";
+
+require_once PROJECT_ROOT . '/vendor/autoload.php';
 
 use app\core\Application;
+use app\core\Template;
+
+Template::$cache_enabled = true;
+Template::ClearCache();
 
 if (getenv('APP_ENV') === 'development') {
     error_reporting(E_ALL);
