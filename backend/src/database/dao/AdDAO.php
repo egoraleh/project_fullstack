@@ -17,7 +17,7 @@ class AdDAO implements DAOInterface
     private const SQL_GET_BY_USER_ID = "SELECT * FROM ads WHERE user_id = :user_id";
     private const SQL_INSERT         = "INSERT INTO ads (title, price, description, user_id, category_id, address, image_url)
                                         VALUES (:title, :price, :description, :user_id, :category_id, :address, :image_url)";
-    private const string SQL_UPDATE         = "UPDATE ads SET 
+    private const SQL_UPDATE         = "UPDATE ads SET 
                title = :title, 
                price = :price, 
                description = :description, 
@@ -26,7 +26,7 @@ class AdDAO implements DAOInterface
                address = :address, 
                image_url = :image_url 
            WHERE id = :id";
-    private const string SQL_DELETE         = "DELETE FROM ads WHERE id = :id";
+    private const SQL_DELETE         = "DELETE FROM ads WHERE id = :id";
 
     public function __construct()
     {

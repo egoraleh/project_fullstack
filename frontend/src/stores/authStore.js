@@ -27,6 +27,7 @@ export const useAuthStore = defineStore('auth', {
         async logout() {
             await api.post('/logout')
             this.user = null
+
         }
     }
 })

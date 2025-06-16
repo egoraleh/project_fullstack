@@ -1,6 +1,8 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import { createPinia } from "pinia";
+import {useAuthStore} from "./stores/authStore";
 import About from './pages/main/About.vue'
 import Register from './pages/authentication/Register.vue'
 import NotFound from './pages/exceptions/NotFound.vue'
@@ -13,8 +15,7 @@ import Forbidden from "./pages/exceptions/Forbidden.vue";
 import Unauthorized from "./pages/exceptions/Unauthorized.vue";
 import BadGateway from "./pages/exceptions/BadGateway.vue";
 import AdDetails from "./pages/ads/AdDetails.vue";
-import { createPinia } from "pinia";
-import {useAuthStore} from "./stores/authStore";
+import NewAd from "./pages/ads/NewAd.vue";
 
 const routes = [
     { path: '/', component: Ads },
@@ -24,6 +25,7 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/edit-profile', component: EditProfile},
     { path: '/profile', component: Profile },
+    { path: '/ads/new', component: NewAd },
     { path: '/:pathMatch(.*)*', component: NotFound },
     { path: '/server-error', component: ServerError },
     { path: '/forbidden', component: Forbidden },
@@ -48,7 +50,7 @@ router.beforeEach(async (to, from, next) => {
         await authStore.fetchCurrentUser();
     }
 
-    const protectedRoutes = ['/profile', '/edit-profile'];
+    const protectedRoutes = ['/profile', '/edit-profile', '/ads/new'];
 
     if (protectedRoutes.includes(to.path) && !authStore.user) {
         return next('/login');

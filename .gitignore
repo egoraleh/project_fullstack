@@ -9,3 +9,4 @@ backend/config.json
 .idea
 project_fullstack.iml
 backend/cache
+/backend/public/uploads/

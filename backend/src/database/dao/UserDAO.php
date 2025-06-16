@@ -19,6 +19,7 @@ class UserDAO implements DAOInterface
     private const SQL_DELETE_TOKEN  = "UPDATE users SET remember_token = NULL WHERE remember_token = :token";
     private const SQL_GET_BY_EMAIL   = "SELECT * FROM users WHERE email = :email";
     private const SQL_GET_BY_PHONE   = "SELECT * FROM users WHERE phone_number = :phone_number";
+    private const SQL_GET_AVATAR_PATH = "SELECT avatar_path FROM users WHERE id = :id";
     private const SQL_INSERT         = "INSERT INTO users 
         (name, surname, email, password, role, phone_number, avatar_path) 
         VALUES 
@@ -68,6 +69,15 @@ class UserDAO implements DAOInterface
         $stmt->execute(['phone_number' => $phoneNumber]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
+    }
+
+    public function getAvatarPath(int $id): ?string
+    {
+        $stmt = $this->pdo->prepare(self::SQL_GET_AVATAR_PATH);
+        $stmt->execute(['id' => $id]);
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['avatar_path'] ?? null;
     }
 
     public function save(object $user): void
