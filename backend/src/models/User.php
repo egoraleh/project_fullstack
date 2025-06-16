@@ -7,17 +7,18 @@ namespace app\models;
 class User
 {
     private int $id;
-    private mixed $name;
-    private mixed $surname;
+    private ?string $name;
+    private ?string $surname;
     private string $email;
     private string $password;
     private string $role;
-    private mixed $phoneNumber;
+    private ?string $phoneNumber;
     private string $avatarUrl;
+    private ?string $rememberToken;
 
     public function __construct(int $id, mixed $name, mixed $surname,
                                 string $email, string $password, string $role,
-                                mixed $phoneNumber, string $avatarUrl) {
+                                mixed $phoneNumber, string $avatarUrl, ?string $rememberToken = null) {
         $this->id = $id;
         $this->name = $name;
         $this->surname = $surname;
@@ -26,6 +27,7 @@ class User
         $this->role = $role;
         $this->phoneNumber = $phoneNumber;
         $this->avatarUrl = $avatarUrl;
+        $this->rememberToken = $rememberToken;
     }
 
 
@@ -44,7 +46,7 @@ class User
         return $this->id;
     }
 
-    public function getName(): mixed
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -64,7 +66,7 @@ class User
         $this->email = $email;
     }
 
-    public function getPhoneNumber(): mixed
+    public function getPhoneNumber(): ?string
     {
         return $this->phoneNumber;
     }
@@ -74,7 +76,7 @@ class User
         $this->phoneNumber = $phoneNumber;
     }
 
-    public function getSurname(): mixed
+    public function getSurname(): ?string
     {
         return $this->surname;
     }
@@ -107,5 +109,15 @@ class User
     public function setId(int $id): void
     {
         $this->id = $id;
+    }
+
+    public function getRememberToken(): ?string
+    {
+        return $this->rememberToken;
+    }
+
+    public function setRememberToken(?string $rememberToken): void
+    {
+        $this->rememberToken = $rememberToken;
     }
 }

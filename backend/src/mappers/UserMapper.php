@@ -17,7 +17,8 @@ class UserMapper implements MapperInterface
             $row['password'],
             $row['role'],
             $row['phone_number'],
-            $row['avatar_url']
+            $row['avatar_path'],
+            $row['remember_token'] ?? null
         );
     }
 

@@ -7,7 +7,8 @@ CREATE TABLE users
     email        varchar(50) UNIQUE      NOT NULL,
     avatar_path  varchar,
     password     varchar(255)            NOT NULL,
-    phone_number char(12) UNIQUE
+    phone_number char(12) UNIQUE,
+    remember_token VARCHAR(255)
 );
 
 CREATE TABLE categories

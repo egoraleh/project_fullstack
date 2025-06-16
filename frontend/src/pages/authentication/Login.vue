@@ -9,7 +9,12 @@
 
       <div class="form-group">
         <label for="password">Пароль:</label>
-        <input type="password" id="password" v-model="form.password" required />
+        <input type="password" id="password" autocomplete="off" v-model="form.password" required />
+      </div>
+
+      <div class="form-group">
+        <input type="checkbox" id="remember" v-model="form.remember" />
+        <label for="remember">Запомнить меня</label>
       </div>
 
       <button type="submit" class="sign-btn">Войти</button>
@@ -23,7 +28,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from '../../services/axios';
 
 export default {
   name: 'Login',
@@ -31,15 +36,17 @@ export default {
     return {
       form: {
         email: '',
-        password: ''
+        password: '',
+        remember: false
       }
     }
   },
   methods: {
     async login() {
       try {
-        const response = await axios.post('/api/login', this.form);
+        const response = await api.post('/login', this.form);
         alert('Вход успешен: ' + response.data.message);
+        this.$router.push('/');
       } catch (error) {
         console.error(error);
         alert('Ошибка при входе.');

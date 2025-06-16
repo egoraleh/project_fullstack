@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS users
     email        VARCHAR(50) UNIQUE NOT NULL,
     avatar_path  VARCHAR,
     password     VARCHAR(255) NOT NULL,
-    phone_number CHAR(12) UNIQUE
+    phone_number CHAR(12) UNIQUE,
+    remember_token VARCHAR(255)
 );
 SQL
         );

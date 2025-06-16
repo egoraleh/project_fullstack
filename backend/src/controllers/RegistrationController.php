@@ -30,12 +30,12 @@ class RegistrationController
         try {
             $user = $this->service->register($data);
 
-            $this->logger->info('User successfully registered', ['user_id' => $user->getId()]);
+            $this->logger->info('User successfully registered', ['user_email' => $user->getEmail()]);
 
             $response->setStatusCode(HttpStatusCodeEnum::HTTP_CREATED);
             $response->json([
                 'message' => 'Registration successful',
-                'user_id' => $user->getId()
+                'user_email' => $user->getEmail()
             ]);
         } catch (ValidationException $e) {
             $this->logger->warning('Registration validation failed', ['error' => $e->getMessage()]);

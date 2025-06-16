@@ -11,29 +11,33 @@
 </template>
 
 <script>
+import { useAuthStore } from '../../stores/authStore'
+import api from '../../services/axios'
+
 export default {
   name: 'About',
   data() {
     return {
-      username: 'гость',
-      aboutHtml: null,
+      aboutHtml: null
+    }
+  },
+  computed: {
+    username() {
+      const authStore = useAuthStore()
+      return authStore.username
     }
   },
   mounted() {
-    const storedUser = localStorage.getItem('username');
-    if (storedUser) {
-      this.username = storedUser;
-    }
-    this.fetchAboutHtml();
+    this.fetchAboutHtml()
   },
   methods: {
     async fetchAboutHtml() {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/about-page`);
-        if (!response.ok) throw new Error('Ошибка загрузки данных');
-        this.aboutHtml = await response.text();
+        const response = await api.get('/about-page')
+        this.aboutHtml = response.data
       } catch (error) {
-        console.error(error);
+        console.error('Ошибка загрузки about:', error)
+        this.aboutHtml = '<p>Не удалось загрузить страницу.</p>'
       }
     }
   }

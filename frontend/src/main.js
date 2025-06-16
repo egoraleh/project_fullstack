@@ -13,6 +13,8 @@ import Forbidden from "./pages/exceptions/Forbidden.vue";
 import Unauthorized from "./pages/exceptions/Unauthorized.vue";
 import BadGateway from "./pages/exceptions/BadGateway.vue";
 import AdDetails from "./pages/ads/AdDetails.vue";
+import { createPinia } from "pinia";
+import {useAuthStore} from "./stores/authStore";
 
 const routes = [
     { path: '/', component: Ads },
@@ -27,14 +29,33 @@ const routes = [
     { path: '/forbidden', component: Forbidden },
     { path: '/unauthorized', component: Unauthorized },
     { path: '/bad-gateway', component: BadGateway }
-]
+];
 
 const router = createRouter({
     history: createWebHistory(),
     routes
-})
+});
 
-const app = createApp(App)
+const app = createApp(App);
+const pinia = createPinia();
 
-app.use(router)
-app.mount('#app')
+app.use(pinia);
+
+router.beforeEach(async (to, from, next) => {
+    const authStore = useAuthStore();
+
+    if (authStore.user === null) {
+        await authStore.fetchCurrentUser();
+    }
+
+    const protectedRoutes = ['/profile', '/edit-profile'];
+
+    if (protectedRoutes.includes(to.path) && !authStore.user) {
+        return next('/login');
+    }
+
+    next();
+});
+
+app.use(router);
+app.mount('#app');
