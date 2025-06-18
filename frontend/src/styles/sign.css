@@ -27,8 +27,7 @@
     flex-direction: column;
 }
 
-.sign-form input[type="email"],
-.sign-form input[type="password"] {
+.sign-form input {
     padding: 8px 10px;
     border: 1px solid #99cccc;
     border-radius: 6px;
@@ -36,8 +35,7 @@
     transition: border-color 0.3s;
 }
 
-.sign-form input[type="email"]:focus,
-.sign-form input[type="password"]:focus {
+.sign-form input:focus {
     border-color: #33cccc;
     outline: none;
 }
