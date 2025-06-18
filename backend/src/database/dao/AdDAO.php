@@ -52,7 +52,7 @@ class AdDAO implements DAOInterface
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_BY_USER_ID);
         $stmt->execute(['user_id' => $userId]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
 

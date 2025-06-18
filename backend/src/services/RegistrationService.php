@@ -34,8 +34,8 @@ class RegistrationService
 
         $user = new User(
             0,
-            $data['first_name'] ?? null,
-            $data['last_name']  ?? null,
+            $data['firstName'] ?? null,
+            $data['lastName']  ?? null,
             $data['email'],
             password_hash($data['password'], PASSWORD_DEFAULT),
             'basic',

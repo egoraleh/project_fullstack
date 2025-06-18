@@ -16,6 +16,7 @@ import Unauthorized from "./pages/exceptions/Unauthorized.vue";
 import BadGateway from "./pages/exceptions/BadGateway.vue";
 import AdDetails from "./pages/ads/AdDetails.vue";
 import NewAd from "./pages/ads/NewAd.vue";
+import MyAds from "./pages/ads/MyAds.vue";
 
 const routes = [
     { path: '/', component: Ads },
@@ -25,6 +26,7 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/edit-profile', component: EditProfile},
     { path: '/profile', component: Profile },
+    { path: '/ads', component: MyAds },
     { path: '/ads/new', component: NewAd },
     { path: '/:pathMatch(.*)*', component: NotFound },
     { path: '/server-error', component: ServerError },

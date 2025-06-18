@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', {
 
     getters: {
         username(state) {
-            return state.user ? state.user.email : 'гость'
+            return state.user ? state.user.name : 'гость'
         }
     },
 

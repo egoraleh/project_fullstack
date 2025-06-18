@@ -104,7 +104,7 @@ export default {
       input.value = buildValue(userDigits);
       setCaret(input.value.length);
 
-      this.form.phone = '+7' + userDigits.join('');
+      this.phoneNumber = input.value;
     });
   },
   methods: {
@@ -115,7 +115,7 @@ export default {
       }
 
       try {
-        const response = await api.post('/api/register', {
+        const response = await api.post('/register', {
           firstName: this.form.firstName,
           lastName: this.form.lastName,
           phone: this.form.phone,

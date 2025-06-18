@@ -7,7 +7,7 @@
 
         <template v-if="user">
           <router-link to="/profile">Профиль</router-link>
-          <router-link to="/ads/new">Мои объявления</router-link>
+          <router-link to="/ads">Мои объявления</router-link>
           <a href="#" @click.prevent="logout">Выйти</a>
         </template>
 

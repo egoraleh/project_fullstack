@@ -10,6 +10,7 @@ use app\core\Logger;
 use app\services\AdService;
 use app\exceptions\ValidationException;
 use app\enums\HttpStatusCodeEnum;
+use Throwable;
 
 class AdController
 {
@@ -37,7 +38,7 @@ class AdController
             $this->logger->warning("Ошибка валидации при создании объявления", ['error' => $e->getMessage()]);
             $response->setStatusCode(HttpStatusCodeEnum::HTTP_BAD_REQUEST);
             $response->json(['error' => $e->getMessage()]);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error("Ошибка при создании объявления", [
                 'exception' => get_class($e),
                 'message'   => $e->getMessage()
@@ -54,7 +55,7 @@ class AdController
         try {
             $ads = $this->adService->getAllAds();
             $response->json($ads);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error("Ошибка при получении объявлений", [
                 'exception' => get_class($e),
                 'message'   => $e->getMessage()
@@ -64,8 +65,28 @@ class AdController
         }
     }
 
-    public function getAd(Request $request, Response $response, int $id): void
+    public function getAdsByUser(Request $request, Response $response, array $params): void
     {
+        $userId = (int)($params['id'] ?? 0);
+        $this->logger->info("Получение объявлений пользователя", ['user_id' => $userId]);
+
+        try {
+            $ads = $this->adService->getAdsByUserId($userId);
+
+            $response->json($ads);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при получении объявлений пользователя", [
+                'exception' => get_class($e),
+                'message'   => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Internal Server Error']);
+        }
+    }
+
+    public function getAd(Request $request, Response $response, array $params): void
+    {
+        $id = (int)($params['id'] ?? 0);
         $this->logger->info("Получение объявления", ['id' => $id]);
 
         try {
@@ -78,7 +99,7 @@ class AdController
                 $response->setStatusCode(HttpStatusCodeEnum::HTTP_NOT_FOUND);
                 $response->json(['error' => 'Объявление не найдено']);
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error("Ошибка при получении объявления", [
                 'exception' => get_class($e),
                 'message'   => $e->getMessage()
@@ -88,15 +109,16 @@ class AdController
         }
     }
 
-    public function deleteAd(Request $request, Response $response, int $id): void
+    public function deleteAd(Request $request, Response $response, array $params): void
     {
+        $id = (int)($params['id'] ?? 0);
         $this->logger->info("Попытка удаления объявления", ['id' => $id]);
 
         try {
             $this->adService->deleteAd($id);
             $this->logger->info("Объявление удалено", ['id' => $id]);
             $response->json(['message' => 'Объявление удалено']);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logger->error("Ошибка при удалении объявления", [
                 'exception' => get_class($e),
                 'message'   => $e->getMessage()
@@ -117,7 +139,7 @@ class AdController
             return;
         }
 
-        $uploadDir = __DIR__.'/../../public/uploads/';
+        $uploadDir = __DIR__.'/../../public/uploads/ads/';
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0777, true);
         }
@@ -126,13 +148,57 @@ class AdController
         $targetFile = $uploadDir . $fileName;
 
         if (move_uploaded_file($_FILES['image']['tmp_name'], $targetFile)) {
-            $imageUrl = '/uploads/' . $fileName;
+            $imageUrl = '/uploads/ads/' . $fileName;
             $this->logger->info("Файл загружен", ['image_url' => $imageUrl]);
             $response->json(['imageUrl' => $imageUrl]);
         } else {
             $this->logger->error("Ошибка при загрузке файла");
             $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
             $response->json(['error' => 'Ошибка при загрузке файла']);
+        }
+    }
+
+    public function getAdImage(Request $request, Response $response, array $params): void
+    {
+        $id = (int)($params['id'] ?? 0);
+        $this->logger->info("Получение изображения объявления", ['ad_id' => $id]);
+
+        try {
+            $ad = $this->adService->getAdById($id);
+
+            if (!$ad) {
+                $this->logger->warning("Объявление не найдено для изображения", ['ad_id' => $id]);
+                $response->setStatusCode(HttpStatusCodeEnum::HTTP_NOT_FOUND);
+                $response->json(['error' => 'Объявление не найдено']);
+                return;
+            }
+
+            if (empty($ad['image_url'])) {
+                $this->logger->warning("Изображение не прикреплено к объявлению", ['ad_id' => $id]);
+                $response->setStatusCode(HttpStatusCodeEnum::HTTP_NOT_FOUND);
+                $response->json(['error' => 'Изображение не найдено']);
+                return;
+            }
+
+            $filePath = __DIR__ . '/../../public' . $ad['image_url'];
+
+            if (!file_exists($filePath)) {
+                $this->logger->error("Файл изображения не найден на сервере", ['path' => $filePath]);
+                $response->setStatusCode(HttpStatusCodeEnum::HTTP_NOT_FOUND);
+                $response->json(['error' => 'Файл изображения не найден']);
+                return;
+            }
+
+            header('Content-Type: image/jpeg');
+            header('Content-Length: ' . filesize($filePath));
+            readfile($filePath);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при получении изображения объявления", [
+                'exception' => get_class($e),
+                'message'   => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Ошибка сервера при получении изображения']);
         }
     }
 }

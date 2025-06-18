@@ -19,4 +19,6 @@ enum HttpStatusCodeEnum: int
     case HTTP_UNAUTHORIZED = 401;
 
     case HTTP_FORBIDDEN = 403;
+
+    case HTTP_CONFLICT = 409;
 }

@@ -59,6 +59,11 @@ class AdService
         return $this->adDao->getAll();
     }
 
+    public function getAdsByUserId(int $userId): array
+    {
+        return $this->adDao->getByUserId($userId) ?? [];
+    }
+
     public function getAdById(int $id): ?array
     {
         return $this->adDao->get($id);

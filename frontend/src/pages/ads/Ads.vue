@@ -4,7 +4,6 @@
 
     <div class="search-bar">
       <input type="text" v-model="searchQuery" placeholder="Поиск по объявлениям..." />
-      <button @click="fetchAds">Поиск</button>
     </div>
 
     <div class="filters">
@@ -23,59 +22,65 @@
     </div>
 
     <div class="ads-list">
-      <AdCard v-for="ad in filteredAds" :key="ad.id" :ad="ad"/>
+      <AdCard v-for="ad in filteredAds" :key="ad.id" :ad="ad" />
     </div>
   </div>
 </template>
 
 <script>
-import AdCard from "../../components/AdCard.vue";
+import api from '../../services/axios'
+import AdCard from "../../components/AdCard.vue"
 
 export default {
   name: "Ads",
-  components: {AdCard},
+  components: { AdCard },
   data() {
     return {
       searchQuery: "",
       selectedCategory: "",
       selectedSort: "newest",
       categories: ["Транспорт", "Недвижимость", "Электроника", "Одежда", "Услуги"],
-      ads: [
-        { id: 1, title: "Продам велосипед", description: "Отличное состояние", price: 7000, category: "Транспорт" },
-        { id: 2, title: "Айфон 12", description: "Как новый, полный комплект", price: 45000, category: "Электроника" },
-        { id: 3, title: "Аренда квартиры", description: "2-комнатная, центр города", price: 25000, category: "Недвижимость" },
-      ]
+      ads: []
     };
   },
   computed: {
     filteredAds() {
-      let result = this.ads;
+      let result = this.ads
 
       if (this.searchQuery) {
         result = result.filter(ad =>
             ad.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
+        )
       }
 
       if (this.selectedCategory) {
-        result = result.filter(ad => ad.category === this.selectedCategory);
+        result = result.filter(ad => ad.category === this.selectedCategory)
       }
 
       if (this.selectedSort === "cheapest") {
-        result.sort((a, b) => a.price - b.price);
+        result.sort((a, b) => a.price - b.price)
       } else if (this.selectedSort === "expensive") {
-        result.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => b.price - a.price)
       } else {
-        result.sort((a, b) => b.id - a.id);
+        result.sort((a, b) => b.id - a.id)
       }
 
-      return result;
+      return result
     }
   },
   methods: {
-    fetchAds() {
-      console.log("Поиск по запросу:", this.searchQuery);
+    async fetchAds() {
+      try {
+        const res = await api.get('/ads')
+        this.ads = res.data
+      } catch (error) {
+        console.error('Ошибка при загрузке объявлений:', error)
+        alert('Не удалось загрузить объявления')
+      }
     }
+  },
+  created() {
+    this.fetchAds()
   }
-};
+}
 </script>
