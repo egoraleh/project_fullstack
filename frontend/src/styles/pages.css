@@ -175,14 +175,15 @@
     margin-bottom: 20px;
 }
 
-.ad-details-container .back-link {
+.back-link {
     display: inline-block;
-    text-decoration: none;
-    color: #006699;
+    margin-top: 20px;
+    color: #00b3b3;
     font-weight: bold;
+    text-decoration: none;
 }
 
-.ad-details-container .back-link:hover {
+.back-link:hover {
     text-decoration: underline;
 }
 
@@ -533,4 +534,106 @@
     background-color: #f9f9f9;
     display: block;
     user-select: none;
+}
+
+.review-card {
+    border: 1px solid #ddd;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #fff;
+    max-width: 500px;
+    margin-bottom: 16px;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.review-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+.review-user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.review-username {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.review-rating {
+    color: #ffc107;
+    font-size: 18px;
+}
+
+.star {
+    margin-right: 2px;
+}
+
+.star.filled {
+    color: #ffc107;
+}
+
+.star:not(.filled) {
+    color: #ddd;
+}
+
+.review-text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.owner-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-primary {
+    background-color: #33cccc;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #289c9c;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #aa1b29;
+}
+
+.btn-success {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-success:hover {
+    background-color: #0069d9;
 }

@@ -48,6 +48,40 @@ class UserController
         readfile($filePath);
         exit;
     }
+
+    public function getUserById(Request $request, Response $response, array $params): void
+    {
+        $userId = (int)($params['id'] ?? 0);
+
+        if ($userId === 0) {
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_BAD_REQUEST);
+            $response->json(['error' => 'Некорректный ID пользователя']);
+            return;
+        }
+
+        try {
+            $user = $this->userDAO->get($userId);
+
+            if (!$user) {
+                $response->setStatusCode(HttpStatusCodeEnum::HTTP_NOT_FOUND);
+                $response->json(['error' => 'Пользователь не найден']);
+                return;
+            }
+
+            unset($user['password'], $user['role']);
+
+            $response->json($user);
+
+        } catch (\Throwable $e) {
+            $this->logger->error('Ошибка при получении пользователя по ID', [
+                'exception' => get_class($e),
+                'message'   => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Не удалось получить пользователя']);
+        }
+    }
+
     public function updateUser(Request $request, Response $response, array $params): void
     {
         $userId = (int)($params['id'] ?? 0);

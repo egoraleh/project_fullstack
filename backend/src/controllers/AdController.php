@@ -7,19 +7,23 @@ use app\core\Application;
 use app\core\Request;
 use app\core\Response;
 use app\core\Logger;
+use app\exceptions\ForbiddenException;
 use app\services\AdService;
 use app\exceptions\ValidationException;
 use app\enums\HttpStatusCodeEnum;
+use app\services\AuthenticationService;
 use Throwable;
 
 class AdController
 {
     private AdService $adService;
+    private AuthenticationService $authenticationService;
     private Logger $logger;
 
     public function __construct()
     {
         $this->logger = Application::$app->getLogger();
+        $this->authenticationService = new AuthenticationService();
         $this->adService = new AdService($this->logger);
     }
 
@@ -112,12 +116,32 @@ class AdController
     public function deleteAd(Request $request, Response $response, array $params): void
     {
         $id = (int)($params['id'] ?? 0);
-        $this->logger->info("Попытка удаления объявления", ['id' => $id]);
+        $currentUser = $this->authenticationService->getCurrentUser();
+
+        if (!$currentUser) {
+            $this->logger->warning("Попытка удаления без авторизации", ['ad_id' => $id]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_UNAUTHORIZED);
+            $response->json(['error' => 'Вы не авторизованы']);
+            return;
+        }
+
+        $this->logger->info("Попытка удаления объявления", [
+            'ad_id'   => $id,
+            'user_id' => $currentUser->getId()
+        ]);
 
         try {
-            $this->adService->deleteAd($id);
-            $this->logger->info("Объявление удалено", ['id' => $id]);
+            $this->adService->deleteAd($id, $currentUser->getId());
+
+            $this->logger->info("Объявление удалено", ['ad_id' => $id, 'user_id' => $currentUser->getId()]);
             $response->json(['message' => 'Объявление удалено']);
+        } catch (ForbiddenException $e) {
+            $this->logger->warning("Удаление отклонено — не владелец", [
+                'ad_id'   => $id,
+                'user_id' => $currentUser->getId()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_FORBIDDEN);
+            $response->json(['error' => $e->getMessage()]);
         } catch (Throwable $e) {
             $this->logger->error("Ошибка при удалении объявления", [
                 'exception' => get_class($e),
@@ -199,6 +223,97 @@ class AdController
             ]);
             $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
             $response->json(['error' => 'Ошибка сервера при получении изображения']);
+        }
+    }
+
+    public function getFavoriteStatus(Request $request, Response $response, array $params): void
+    {
+        $adId = (int)($params['id'] ?? 0);
+        $user = $this->authenticationService->getCurrentUser();
+
+        if (!$user) {
+            $this->logger->warning("Попытка получения объявления без авторизации", ['ad_id' => $adId]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_UNAUTHORIZED);
+            $response->json(['error' => 'Вы не авторизованы']);
+            return;
+        }
+
+        try {
+            $isFavorite = $this->adService->isFavorite($user->getId(), $adId);
+            $response->json(['isFavorite' => $isFavorite]);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при проверке статуса избранного", [
+                'exception' => get_class($e),
+                'message' => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Ошибка сервера']);
+        }
+    }
+
+    public function addToFavorites(Request $request, Response $response): void
+    {
+        $user = $this->authenticationService->getCurrentUser();
+
+        if (!$user) {
+            $this->logger->warning("Попытка добавления в избранное без авторизации");
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_UNAUTHORIZED);
+            $response->json(['error' => 'Вы не авторизованы']);
+            return;
+        }
+
+        $data = $request->getBody();
+        $adId = isset($data['adId']) ? (int)$data['adId'] : 0;
+
+        if ($adId <= 0) {
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_BAD_REQUEST);
+            $response->json(['error' => 'Неверный ID объявления']);
+            return;
+        }
+
+        try {
+            $this->adService->addFavorite($user->getId(), $adId);
+            $response->json(['message' => 'Добавлено в избранное']);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при добавлении в избранное", [
+                'exception' => get_class($e),
+                'message' => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Ошибка сервера']);
+        }
+    }
+
+    public function removeFromFavorites(Request $request, Response $response): void
+    {
+        $user = $this->authenticationService->getCurrentUser();
+
+        if (!$user) {
+            $this->logger->warning("Попытка удаления из избранного без авторизации");
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_UNAUTHORIZED);
+            $response->json(['error' => 'Вы не авторизованы']);
+            return;
+        }
+
+        $data = $request->getBody();
+        $adId = isset($data['adId']) ? (int)$data['adId'] : 0;
+
+        if ($adId <= 0) {
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_BAD_REQUEST);
+            $response->json(['error' => 'Неверный ID объявления']);
+            return;
+        }
+
+        try {
+            $this->adService->removeFavorite($user->getId(), $adId);
+            $response->json(['message' => 'Удалено из избранного']);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при удалении из избранного", [
+                'exception' => get_class($e),
+                'message' => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Ошибка сервера']);
         }
     }
 }

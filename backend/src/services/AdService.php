@@ -4,18 +4,25 @@ namespace app\services;
 
 use app\core\Logger;
 use app\database\dao\AdDAO;
+use app\database\dao\FavoriteAdDAO;
+use app\exceptions\ForbiddenException;
+use app\exceptions\NotFoundException;
 use app\models\Ad;
 use app\exceptions\ValidationException;
+use app\models\FavoriteAd;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Throwable;
 
 class AdService
 {
     private AdDAO $adDao;
+    private FavoriteAdDAO $favoriteAdDao;
     private Logger $logger;
 
     public function __construct(Logger $logger)
     {
         $this->adDao = new AdDAO();
+        $this->favoriteAdDao = new FavoriteAdDAO();
         $this->logger = $logger;
     }
 
@@ -69,10 +76,35 @@ class AdService
         return $this->adDao->get($id);
     }
 
-    public function deleteAd(int $id): void
+    /**
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     */
+    public function deleteAd(int $adId, int $userId): void
     {
-        $this->adDao->delete($id);
-        $this->logger->info("Объявление с id={$id} удалено");
+        $ad = $this->adDao->get($adId);
+
+        if (!$ad) {
+            throw new NotFoundException("Объявление не найдено");
+        }
+
+        if ($ad['user_id'] !== $userId) {
+            throw new ForbiddenException("Вы не можете удалить это объявление");
+        }
+
+        $filePath = __DIR__ . '/../../public' . $ad['image_url'];
+        if (!empty($filePath) && file_exists($filePath)) {
+            try {
+                unlink($filePath);
+                $this->logger->info("Изображение объявления id={$adId} удалено: {$ad['image_path']}");
+            } catch (Throwable $e) {
+                $this->logger->error("Не удалось удалить изображение объявления id={$adId}: " . $e->getMessage());
+                throw new FileNotFoundException();
+            }
+        }
+
+        $this->adDao->delete($adId);
+        $this->logger->info("Объявление с id={$adId} удалено пользователем id={$userId}");
     }
 
     /**
@@ -91,5 +123,75 @@ class AdService
         if (!is_numeric($data['price']) || $data['price'] <= 0) {
             throw new ValidationException("Цена должна быть положительным числом");
         }
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws Throwable
+     */
+    public function addFavorite(int $userId, int $adId): void
+    {
+        if ($userId <= 0 || $adId <= 0) {
+            throw new ValidationException("Неверные данные для добавления в избранное");
+        }
+
+        $favorites = $this->favoriteAdDao->getByUserId($userId);
+        foreach ($favorites ?? [] as $fav) {
+            if ($fav['ad_id'] === $adId) {
+                $this->logger->info("Объявление уже в избранном", ['user_id' => $userId, 'ad_id' => $adId]);
+                return;
+            }
+        }
+
+        $favoriteAd = new FavoriteAd(null, $userId, $adId, null);
+        $this->favoriteAdDao->save($favoriteAd);
+        $this->logger->info("Добавлено объявление в избранное", ['user_id' => $userId, 'ad_id' => $adId]);
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws Throwable
+     */
+    public function removeFavorite(int $userId, int $adId): void
+    {
+        if ($userId <= 0 || $adId <= 0) {
+            throw new ValidationException("Неверные данные для удаления из избранного");
+        }
+
+        $favorites = $this->favoriteAdDao->getByUserId($userId);
+        if ($favorites === null) {
+            $this->logger->info("Избранных объявлений для пользователя не найдено", ['user_id' => $userId]);
+            return;
+        }
+
+        foreach ($favorites as $fav) {
+            if ($fav['ad_id'] === $adId) {
+                $this->favoriteAdDao->delete($fav['id']);
+                $this->logger->info("Удалено объявление из избранного", ['user_id' => $userId, 'ad_id' => $adId]);
+                return;
+            }
+        }
+
+        $this->logger->info("Объявление не найдено в избранном при попытке удаления", ['user_id' => $userId, 'ad_id' => $adId]);
+    }
+
+    public function isFavorite(int $userId, int $adId): bool
+    {
+        if ($userId <= 0 || $adId <= 0) {
+            return false;
+        }
+
+        $favorites = $this->favoriteAdDao->getByUserId($userId);
+        if ($favorites === null) {
+            return false;
+        }
+
+        foreach ($favorites as $fav) {
+            if ($fav['ad_id'] === $adId) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

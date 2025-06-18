@@ -7,12 +7,12 @@ use DateTime;
 
 class FavoriteAd
 {
-    private int $id;
+    private ?int $id;
     private int $adId;
     private int $userId;
-    private DateTime $createdAt;
+    private ?DateTime $createdAt;
 
-    public function __construct(int $id, int $userId, int $adId, DateTime $createdAt) {
+    public function __construct(?int $id, int $userId, int $adId, ?DateTime $createdAt) {
         $this->id = $id;
         $this->adId = $adId;
         $this->userId = $userId;
