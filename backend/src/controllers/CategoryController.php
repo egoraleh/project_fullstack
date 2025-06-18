@@ -48,4 +48,23 @@ class CategoryController
             $response->json(['error' => 'Internal Server Error']);
         }
     }
+
+    public function getAllCategories(Request $request, Response $response): void
+    {
+        $this->logger->info("Запрос всех категорий");
+
+        try {
+            $categories = $this->categoryDAO->getAll();
+
+            $response->json($categories);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при получении всех категорий", [
+                'exception' => get_class($e),
+                'message'   => $e->getMessage()
+            ]);
+
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Internal Server Error']);
+        }
+    }
 }

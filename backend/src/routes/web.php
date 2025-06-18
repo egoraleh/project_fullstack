@@ -35,3 +35,4 @@ $router->get('/api/ads/{id:\d+}/reviews', [ReviewController::class, 'getReviewsB
 $router->post('/api/ads/{id:\d+}/reviews/add', [ReviewController::class, 'createReview']);
 $router->post('/api/ads/reviews/delete/{id:\d+}', [ReviewController::class, 'deleteReview']);
 $router->post('/api/ads/{id:\d+}/edit', [AdController::class, 'updateAd']);
+$router->get('/api/categories', [CategoryController::class, 'getAllCategories']);

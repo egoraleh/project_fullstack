@@ -25,9 +25,9 @@
       <div class="form-group">
         <label class="form-group__label">Категория:</label>
         <select class="form-group__select" v-model="category_id" required>
-          <option value="1">Электроника</option>
-          <option value="2">Одежда</option>
-          <option value="3">Авто</option>
+          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+            {{ cat.name }}
+          </option>
         </select>
       </div>
 
@@ -60,14 +60,29 @@ export default {
       price: '',
       description: '',
       address: '',
-      category_id: 1,
+      category_id: null,
+      categories: [],
       preview: null,
       selectedFile: null
     }
   },
+  async created() {
+    await this.fetchCategories();
+  },
   methods: {
+    async fetchCategories() {
+      try {
+        const res = await api.get('/categories');
+        this.categories = res.data.sort((a, b) => a.name.localeCompare(b.name));
+        if (this.categories.length) {
+          this.category_id = this.categories[0].id;
+        }
+      } catch (error) {
+        alert('Ошибка при загрузке категорий');
+      }
+    },
     onPriceInput(e) {
-      this.price = e.target.value.replace(/\D+/g, '')
+      this.price = e.target.value.replace(/\D+/g, '');
     },
     handleFile(event) {
       const file = event.target.files[0];

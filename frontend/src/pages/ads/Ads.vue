@@ -10,7 +10,7 @@
       <select v-model="selectedCategory">
         <option value="">Все категории</option>
         <option v-for="category in categories" :key="category" :value="category">
-          {{ category }}
+          {{ category.name }}
         </option>
       </select>
 
@@ -39,48 +39,58 @@ export default {
       searchQuery: "",
       selectedCategory: "",
       selectedSort: "newest",
-      categories: ["Транспорт", "Недвижимость", "Электроника", "Одежда", "Услуги"],
+      categories: [],
       ads: []
     };
   },
   computed: {
     filteredAds() {
-      let result = this.ads
+      let result = this.ads;
 
       if (this.searchQuery) {
         result = result.filter(ad =>
             ad.title.toLowerCase().includes(this.searchQuery.toLowerCase())
-        )
+        );
       }
 
       if (this.selectedCategory) {
-        result = result.filter(ad => ad.category === this.selectedCategory)
+        result = result.filter(ad => ad.category_id === this.selectedCategory.id);
       }
 
       if (this.selectedSort === "cheapest") {
-        result.sort((a, b) => a.price - b.price)
+        result.sort((a, b) => a.price - b.price);
       } else if (this.selectedSort === "expensive") {
-        result.sort((a, b) => b.price - a.price)
+        result.sort((a, b) => b.price - a.price);
       } else {
-        result.sort((a, b) => b.id - a.id)
+        result.sort((a, b) => b.id - a.id);
       }
 
-      return result
+      return result;
     }
   },
   methods: {
     async fetchAds() {
       try {
-        const res = await api.get('/ads')
-        this.ads = res.data
+        const res = await api.get('/ads');
+        this.ads = res.data;
       } catch (error) {
-        console.error('Ошибка при загрузке объявлений:', error)
-        alert('Не удалось загрузить объявления')
+        console.error('Ошибка при загрузке объявлений:', error);
+        alert('Не удалось загрузить объявления');
+      }
+    },
+    async fetchCategories() {
+      try {
+        const res = await api.get('/categories');
+        this.categories = res.data.sort((a, b) => a.name.localeCompare(b.name));
+      } catch (error) {
+        console.error('Ошибка при загрузке категорий:', error);
+        alert('Не удалось загрузить категории');
       }
     }
   },
   created() {
-    this.fetchAds()
+    this.fetchCategories();
+    this.fetchAds();
   }
 }
 </script>
