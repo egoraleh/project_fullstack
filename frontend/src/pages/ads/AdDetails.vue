@@ -15,19 +15,11 @@
     </div>
 
     <div v-if="isOwner" class="owner-actions">
-      <router-link :to="`/ads/${ad.id}/edit`" class="btn btn-primary">Изменить</router-link>
+      <router-link :to="`/ad/${ad.id}/edit`" class="btn btn-primary">Изменить</router-link>
       <button @click="deleteAd" class="btn btn-danger">Удалить</button>
     </div>
 
-    <div class="ad-reviews">
-      <h3>Отзывы</h3>
-      <div v-if="reviews.length">
-        <ReviewCard v-for="review in reviews" :key="review.id" :review="review" />
-      </div>
-      <p v-else>Пока отзывов нет.</p>
-    </div>
-
-    <div v-if="isAuthenticated && !isOwner" class="review-form">
+    <div v-if="isAuthenticated && !isOwner">
       <button
           v-if="!isFavorite"
           @click="addToFavorites"
@@ -42,6 +34,8 @@
       >
         Убрать из избранного
       </button>
+    </div>
+    <div v-if="isAuthenticated && !isOwner" class="review-form">
       <h3>Оставить отзыв</h3>
       <form @submit.prevent="submitReview">
         <label>
@@ -53,6 +47,20 @@
         <textarea v-model="newReview.text" placeholder="Ваш отзыв..." required></textarea>
         <button type="submit" class="btn btn-success">Отправить</button>
       </form>
+    </div>
+
+    <div class="ad-reviews">
+      <h3>Отзывы</h3>
+      <div v-if="reviews.length">
+        <ReviewCard
+            v-for="review in reviews"
+            :key="review.id"
+            :review="review"
+            :currentUserId="currentUser?.id"
+            @delete-review="deleteReview"
+        />
+      </div>
+      <p v-else>Пока отзывов нет.</p>
     </div>
 
     <router-link to="/" class="back-link">← Назад к объявлениям</router-link>
@@ -107,6 +115,17 @@ export default {
         this.isFavorite = res.data.isFavorite;
       } catch (error) {
         console.error('Ошибка при проверке статуса избранного:', error);
+      }
+    },
+
+    async deleteReview(reviewId) {
+      if (!confirm('Удалить отзыв?')) return;
+
+      try {
+        await api.post(`/ads/reviews/delete/${reviewId}`);
+        await this.loadReviews();
+      } catch (error) {
+        console.error('Ошибка при удалении отзыва:', error);
       }
     },
 
@@ -167,7 +186,13 @@ export default {
     },
     async submitReview() {
       try {
-        await api.post(`/ads/${this.ad.id}/reviews`, this.newReview);
+        const reviewData = {
+          rating: this.newReview.rating,
+          text: this.newReview.text,
+          receiver_id: this.ad.user_id
+        };
+
+        await api.post(`/ads/${this.ad.id}/reviews/add`, reviewData);
         this.newReview.rating = 5;
         this.newReview.text = '';
         await this.loadReviews();

@@ -19,7 +19,7 @@ class FavoriteAd
         $this->createdAt = $createdAt;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): ?DateTime
     {
         return $this->createdAt;
     }
@@ -49,7 +49,7 @@ class FavoriteAd
         $this->userId = $userId;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

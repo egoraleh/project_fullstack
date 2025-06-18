@@ -32,7 +32,7 @@ export default {
         return
       }
 
-      const res = await api.get('/favorites')
+      const res = await api.get('/ads/favorites')
       this.favorites = res.data
     } catch (e) {
       console.error(e)

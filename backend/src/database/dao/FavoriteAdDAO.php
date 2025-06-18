@@ -45,8 +45,7 @@ class FavoriteAdDAO implements DAOInterface
             $stmt = $this->pdo->prepare(self::SQL_INSERT);
             $stmt->execute([
                 'user_id' => $entity->getUserId(),
-                'ad_id' => $entity->getAdId(),
-                'created_at' => $entity->getCreatedAt()
+                'ad_id' => $entity->getAdId()
             ]);
         } else {
             throw new InvalidArgumentException('Expected instance of FavoriteAd');

@@ -113,6 +113,51 @@ class AdController
         }
     }
 
+    public function updateAd(Request $request, Response $response, array $params): void
+    {
+        $id = (int)($params['id'] ?? 0);
+        $currentUser = $this->authenticationService->getCurrentUser();
+
+        if (!$currentUser) {
+            $this->logger->warning("Попытка обновления без авторизации", ['ad_id' => $id]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_UNAUTHORIZED);
+            $response->json(['error' => 'Вы не авторизованы']);
+            return;
+        }
+
+        $this->logger->info("Попытка обновления объявления", [
+            'ad_id'   => $id,
+            'user_id' => $currentUser->getId()
+        ]);
+
+        $data = $request->getBody();
+
+        try {
+            $this->adService->updateAd($id, $currentUser->getId(), $data);
+
+            $this->logger->info("Объявление обновлено", ['ad_id' => $id]);
+            $response->json(['message' => 'Объявление успешно обновлено']);
+        } catch (ForbiddenException $e) {
+            $this->logger->warning("Обновление отклонено — не владелец", [
+                'ad_id'   => $id,
+                'user_id' => $currentUser->getId()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_FORBIDDEN);
+            $response->json(['error' => $e->getMessage()]);
+        } catch (ValidationException $e) {
+            $this->logger->warning("Ошибка валидации при обновлении объявления", ['error' => $e->getMessage()]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_BAD_REQUEST);
+            $response->json(['error' => $e->getMessage()]);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при обновлении объявления", [
+                'exception' => get_class($e),
+                'message'   => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Ошибка сервера']);
+        }
+    }
+
     public function deleteAd(Request $request, Response $response, array $params): void
     {
         $id = (int)($params['id'] ?? 0);
@@ -309,6 +354,30 @@ class AdController
             $response->json(['message' => 'Удалено из избранного']);
         } catch (Throwable $e) {
             $this->logger->error("Ошибка при удалении из избранного", [
+                'exception' => get_class($e),
+                'message' => $e->getMessage()
+            ]);
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_SERVER_ERROR);
+            $response->json(['error' => 'Ошибка сервера']);
+        }
+    }
+
+    public function getFavoriteAds(Request $request, Response $response): void
+    {
+        $user = $this->authenticationService->getCurrentUser();
+
+        if (!$user) {
+            $this->logger->warning("Попытка получения избранных объявлений без авторизации");
+            $response->setStatusCode(HttpStatusCodeEnum::HTTP_UNAUTHORIZED);
+            $response->json(['error' => 'Вы не авторизованы']);
+            return;
+        }
+
+        try {
+            $favoriteAds = $this->adService->getFavoriteAdsByUserId($user->getId());
+            $response->json($favoriteAds);
+        } catch (Throwable $e) {
+            $this->logger->error("Ошибка при получении избранных объявлений", [
                 'exception' => get_class($e),
                 'message' => $e->getMessage()
             ]);

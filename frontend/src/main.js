@@ -18,10 +18,12 @@ import AdDetails from "./pages/ads/AdDetails.vue";
 import NewAd from "./pages/ads/NewAd.vue";
 import MyAds from "./pages/ads/MyAds.vue";
 import Favorites from "./pages/ads/Favorites.vue";
+import EditAd from "./pages/ads/EditAd.vue";
 
 const routes = [
     { path: '/', component: Ads },
-    { path: '/ad=:id', component: AdDetails },
+    { path: '/ad/:id', component: AdDetails },
+    { path: '/ad/:id/edit', component: EditAd },
     { path: '/about', component: About },
     { path: '/register', component: Register },
     { path: '/login', component: Login },

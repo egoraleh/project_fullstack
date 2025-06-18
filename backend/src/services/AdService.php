@@ -61,6 +61,51 @@ class AdService
         }
     }
 
+    /**
+     * @throws ValidationException
+     * @throws ForbiddenException
+     * @throws Throwable
+     */
+    public function updateAd(int $adId, int $userId, array $data): void
+    {
+        $existingAd = $this->adDao->get($adId);
+
+        if (!$existingAd) {
+            throw new ValidationException("Объявление не найдено");
+        }
+
+        if ((int)$existingAd['user_id'] !== $userId) {
+            throw new ForbiddenException("Вы не можете изменить это объявление");
+        }
+
+        $updatedAd = new Ad(
+            $adId,
+            $data['title'] ?? $existingAd['title'],
+            (int)$data['price'] ?? $existingAd['price'],
+            $data['description'] ?? $existingAd['description'],
+            (int)$existingAd['user_id'],
+            (int)$data['category_id'] ?? $existingAd['category_id'],
+            $data['address'] ?? $existingAd['address'],
+            $data['image_url'] ?? $existingAd['image_url']
+        );
+
+        try {
+            $this->adDao->update($updatedAd);
+            $this->logger->info("Объявление обновлено пользователем id={$userId}", ['ad_id' => $adId]);
+        } catch (Throwable $e) {
+            if (!empty($data['image_url']) && $data['image_url'] !== $existingAd['image_url']) {
+                $filePath = __DIR__ . '/../../public' . $data['image_url'];
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                    $this->logger->info("Удалено изображение после неудачного обновления объявления", ['path' => $filePath]);
+                }
+            }
+
+            throw $e;
+        }
+    }
+
+
     public function getAllAds(): array
     {
         return $this->adDao->getAll();
@@ -96,7 +141,7 @@ class AdService
         if (!empty($filePath) && file_exists($filePath)) {
             try {
                 unlink($filePath);
-                $this->logger->info("Изображение объявления id={$adId} удалено: {$ad['image_path']}");
+                $this->logger->info("Изображение объявления id={$adId} удалено: {$ad['image_url']}");
             } catch (Throwable $e) {
                 $this->logger->error("Не удалось удалить изображение объявления id={$adId}: " . $e->getMessage());
                 throw new FileNotFoundException();
@@ -193,5 +238,23 @@ class AdService
         }
 
         return false;
+    }
+
+    public function getFavoriteAdsByUserId(int $userId): array
+    {
+        $favoriteAdsRecords = $this->favoriteAdDao->getByUserId($userId);
+        if (!$favoriteAdsRecords) {
+            return [];
+        }
+
+        $favoriteAds = [];
+        foreach ($favoriteAdsRecords as $fav) {
+            $ad = $this->adDao->get($fav['ad_id']);
+            if ($ad) {
+                $favoriteAds[] = $ad;
+            }
+        }
+
+        return $favoriteAds;
     }
 }

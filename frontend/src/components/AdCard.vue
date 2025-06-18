@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="`/ad=${ad.id}`" class="ad-card">
+  <router-link :to="`/ad/${ad.id}`" class="ad-card">
     <img
         v-if="imageUrl"
         :src="imageUrl"

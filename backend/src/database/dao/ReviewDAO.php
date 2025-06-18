@@ -14,6 +14,7 @@ class ReviewDAO implements DAOInterface
 
     private const SQL_GET_BY_ID            = "SELECT * FROM reviews WHERE id = :id";
     private const SQL_GET_BY_RECEIVER_ID   = "SELECT * FROM reviews WHERE receiver_id = :receiver_id ORDER BY created_at DESC";
+    private const SQL_GET_BY_AD_ID         = "SELECT * FROM reviews WHERE ad_id = :ad_id ORDER BY created_at DESC";
     private const SQL_INSERT               = "INSERT INTO reviews (author_id, receiver_id, ad_id, created_at, text, rating)
                                               VALUES (:author_id, :receiver_id, :ad_id, :created_at, :text, :rating)";
     private const SQL_UPDATE               = "UPDATE reviews SET
@@ -24,7 +25,7 @@ class ReviewDAO implements DAOInterface
                 text = :text, 
                 rating = :rating
             WHERE id = :id";
-    private const string SQL_DELETE               = "DELETE FROM reviews WHERE id = :id";
+    private const SQL_DELETE               = "DELETE FROM reviews WHERE id = :id";
 
     public function __construct()
     {
@@ -43,7 +44,14 @@ class ReviewDAO implements DAOInterface
     {
         $stmt = $this->pdo->prepare(self::SQL_GET_BY_RECEIVER_ID);
         $stmt->execute(['receiver_id' => $receiverId]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $row ?: null;
+    }
+
+    public function getByAdId(int $adId): ?array {
+        $stmt = $this->pdo->prepare(self::SQL_GET_BY_AD_ID);
+        $stmt->execute(['ad_id' => $adId]);
+        $row = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
 
