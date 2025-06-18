@@ -27,7 +27,8 @@
     flex-direction: column;
 }
 
-.sign-form input {
+.sign-form input[type="email"],
+.sign-form input[type="password"] {
     padding: 8px 10px;
     border: 1px solid #99cccc;
     border-radius: 6px;
@@ -35,9 +36,37 @@
     transition: border-color 0.3s;
 }
 
+.sign-form input[type="email"]:focus,
+.sign-form input[type="password"]:focus {
+    border-color: #33cccc;
+    outline: none;
+}
+
+.sign-form .checkbox-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #333;
+    justify-content: flex-start;
+    margin-top: -5px;
+}
+
+.sign-form .checkbox-group label {
+    margin-top: 5px;
+}
+
+.sign-form input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #33cccc;
+    cursor: pointer;
+}
+
 .sign-btn {
     padding: 10px;
-    margin-top: 15px;
+    margin-top: 10px;
     background: #33cccc;
     border: none;
     color: #fff;

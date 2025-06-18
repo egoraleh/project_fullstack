@@ -22,9 +22,9 @@
       <button
           v-if="currentUserId === review.author_id"
           @click="handleDelete"
-          class="btn btn-danger btn-sm"
+          class="review-delete-btn"
       >
-        Удалить
+        ✕
       </button>
     </div>
 

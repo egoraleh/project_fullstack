@@ -12,7 +12,7 @@
         <input type="password" id="password" autocomplete="off" v-model="form.password" required />
       </div>
 
-      <div class="form-group">
+      <div class="form-group checkbox-group">
         <input type="checkbox" id="remember" v-model="form.remember" />
         <label for="remember">Запомнить меня</label>
       </div>
