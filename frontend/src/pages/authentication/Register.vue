@@ -123,7 +123,6 @@ export default {
           password: this.form.password
         });
 
-        alert('Регистрация успешна: ' + response.data.message);
         this.$router.push('/login');
 
       } catch (error) {

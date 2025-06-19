@@ -468,8 +468,9 @@
 }
 
 .my-ads__empty {
+    text-align: center;
+    font-size: 1.2rem;
     color: #777;
-    margin-top: 20px;
 }
 
 .ad-card {

@@ -45,7 +45,6 @@ export default {
     async login() {
       try {
         const response = await api.post('/login', this.form);
-        alert('Вход успешен: ' + response.data.message);
         this.$router.push('/');
       } catch (error) {
         console.error(error);
